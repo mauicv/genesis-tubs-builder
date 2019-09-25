@@ -7,6 +7,7 @@
       v-on:mousemove="handleMouseMove"
       v-on:click="handleMouseClick"
       v-on:dblclick="handleMouseDoubleClick"
+      v-on:keydown.native="keymonitor"
       id="DrawingBoard"/>
     <edit-bar
       :focus="focus"
@@ -60,9 +61,10 @@
       var canvas = document.getElementById("DrawingBoard");
       this.setCanvas(canvas)
       this.clearToSelect()
+      window.addEventListener('keypress', this.handleKeyPress)
     },
     methods: {
-      ...mapActions(['setSelection', 'addConvexSet', 'setCanvas']),
+      ...mapActions(['setSelection', 'addConvexSet', 'setCanvas', 'move', 'zoom']),
       handleMouseMove(event) {
         var x = this.getCanvasLoc(event)
         if(this.memory.length > 0) this.x = x
@@ -91,6 +93,21 @@
         this.memory = []
         this.x = null
         this.focus = null
+      },
+      handleKeyPress(event){
+        if(event.key == 'w') {
+          this.move([0,-3])
+        } else if (event.key == 's') {
+          this.move([0,3])
+        } else if (event.key == 'a') {
+          this.move([-3,0])
+        } else if (event.key == 'd') {
+          this.move([3,0])
+        } else if (event.key == 'x') {
+          this.zoom(0.1)
+        } else if (event.key == 'z') {
+          this.zoom(-0.1)
+        }
       }
     }
   }
