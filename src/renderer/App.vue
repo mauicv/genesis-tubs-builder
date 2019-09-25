@@ -6,6 +6,9 @@
 </template>
 
 <script>
+
+  import { mapGetters, mapActions } from 'vuex'
+
   export default {
     name: 'genesis-tubs-builder',
     data() {
@@ -98,11 +101,17 @@
             }
         },
         methods: {
+          ...mapActions(['save', 'load', 'setSelection']),
           onItemClick(event, item) {
-            console.log(item)
+            if (item.title == 'Save') { this.save() }
+            if (item.title == 'Load') { this.load() }
+            else {
+              this.setSelection(item.title)
+            }
           }
-        }
+        },
       }
+
 </script>
 <style>
   /* CSS */

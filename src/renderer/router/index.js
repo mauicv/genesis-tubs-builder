@@ -7,8 +7,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default
+      name: 'drawing-canvas',
+      component: require('@/components/canvas/DrawingCanvas.vue').default
     },
     {
       path: '*',
