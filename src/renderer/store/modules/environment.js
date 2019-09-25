@@ -59,7 +59,7 @@ const mutations = {
     var points = []
     state.points.forEach(function(point){
       var xd=gm.mult(gm.minus(point.x, state.center), amount);
-      point.x = (gm.add(xd,point.x));
+      point.x = (gm.add(xd, point.x));
       points.push(point)
     })
     state.points = points
@@ -71,6 +71,14 @@ const mutations = {
       points.push(point)
     })
     state.points = points
+  },
+  deleteConvexSet (state, convexSet) {
+    state.convexSets = state.convexSets
+      .filter((set)=>set != convexSet)
+    state.lines = state.lines
+      .filter((line)=>!convexSet.lines.includes(line))
+    state.points = state.points
+      .filter((point)=>!convexSet.toAllPoints().includes(point))
   },
   convertJSONGTEtoJSON (state) {
     ```
@@ -134,6 +142,9 @@ const actions = {
   },
   move: function({ commit }, vector){
     commit('move', vector)
+  },
+  deleteConvexSet: function({ commit }, convexSet){
+    commit('deleteConvexSet', convexSet)
   }
 }
 

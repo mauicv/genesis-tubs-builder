@@ -11,6 +11,7 @@
       id="DrawingBoard"/>
     <edit-bar
       :focus="focus"
+      @remove-focus="clearToSelect"
     />
     <zoom-bar style="float: right;"/>
   </div>

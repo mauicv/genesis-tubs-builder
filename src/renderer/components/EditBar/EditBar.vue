@@ -7,7 +7,10 @@
         </span>
       </div>
       <div class="badge">
-        <span style="color: white;">
+        <span
+            style="color: white;"
+            v-on:click="deleteFocus"
+          >
           DELETE
         </span>
       </div>
@@ -73,9 +76,14 @@
       },
     },
     methods: {
-      ...mapActions(['setSelection']),
+      ...mapActions(['setSelection', 'deleteConvexSet']),
       setGlueMode: function(){this.setSelection('Glue')},
-      setJointMode: function(){this.setSelection('Joint')}
+      setJointMode: function(){this.setSelection('Joint')},
+      deleteFocus: function(){
+        this.deleteConvexSet(this.focus)
+        this.setSelection('Select')
+        this.$emit('remove-focus')
+      }
     }
   }
 

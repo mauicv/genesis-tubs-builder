@@ -72,6 +72,12 @@ class ConvexSet {
     return this.lines.map((line)=>line.from)
   }
 
+  toAllPoints(){
+    return this.lines
+      .map((line)=>[line.from, line.to])
+      .reduce((acc,cur)=>[...acc, ...cur], [])
+  }
+
   sideAligned(convexSet){
     if(this == convexSet) return false
     return this.lines.some(function(thisLine){
