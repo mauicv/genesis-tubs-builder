@@ -44,11 +44,15 @@ class Line {
 }
 
 class ConvexSet {
-  constructor(points){
+  constructor(points, lines){
     this.lines = []
-    for(var i=0;i<points.length;i++){
-      var newLine = new Line(points[i],points[(i+1)%points.length]);
-      this.lines.push(newLine);
+    if (lines == null) {
+      for(var i=0;i<points.length;i++){
+        var newLine = new Line(points[i],points[(i+1)%points.length]);
+        this.lines.push(newLine);
+      }
+    } else {
+      this.lines = lines
     }
 
     this.fixAntiClockwiseOrientaion()

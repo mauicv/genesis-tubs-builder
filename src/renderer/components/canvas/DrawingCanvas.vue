@@ -24,7 +24,7 @@
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
-    name: 'landing-page',
+    name: 'drawing-canvas',
     data: function () {
       return {
         canvas: null,
@@ -62,6 +62,7 @@
       var rect = canvas.getBoundingClientRect();
       this.canvasTop = rect.top
       this.canvasLeft = rect.left
+      this.clearToSelect()
     },
     methods: {
       ...mapActions(['setSelection', 'addConvexSet']),

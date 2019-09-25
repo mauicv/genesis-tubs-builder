@@ -24,22 +24,23 @@ const mutations = {
       state.points.push(line.from)
       state.points.push(line.to)
     })
-    console.log(state)
   },
   save (state) {
-    console.log()
+    var dir = loc.substring(0, loc.lastIndexOf('/'));
+    if (dir != '') {dir=`${dir}/`}
+    fs.writeFileSync(`${dir}env.txt`, JSON.stringify(state))
   },
   clean (state) {
     state.points = []
     state.lines = []
     state.convexSets = []
   },
-  load (state) {
-    var dir = loc.substring(0, loc.lastIndexOf('/'));
-    if (dir != '') {dir=`${dir}/`}
-    var Data_string = fs.readFileSync(`${dir}env.txt`,  'utf8');
-    var data = JSON.parse(Data_string);
-    console.log(data)
+  convertJSONGTEtoJSON (state) {
+    ```
+    Used to convert a genesis-tubs physics environment stored as json into the
+    format used by the editor.
+    ```
+
     var newPoint
     var newConvexSet
 
@@ -57,8 +58,13 @@ const mutations = {
 
     state.lines = state.convexSets.reduce((acc, cur)=>[...acc, ...cur.lines], [])
     // glues, joints, beams, structures, laws, relpoints and graphics
-
-  }
+  },
+  convertJSONtoJSONGTE (state) {
+    ```
+    Used to convert editor format into the json string format required by the
+    genesis-tubs physics engine
+    ```
+  },
 }
 
 const actions = {
@@ -67,7 +73,18 @@ const actions = {
   },
   load: function ({ commit }) {
     commit('clean')
-    commit('load')
+    var dir = loc.substring(0, loc.lastIndexOf('/'));
+    if (dir != '') {dir=`${dir}/`}
+    var Data_string = fs.readFileSync(`${dir}env.txt`,  'utf8');
+    var data = JSON.parse(Data_string)
+    var convexSets = data.convexSets.map(function(set){
+      var lines = set.lines.map(function(line){
+        var from = new primatives.Point(line.from.x)
+        var to = new primatives.Point(line.to.x)
+        return new primatives.Line(from, to)
+      })
+      commit('addConvexSet', new primatives.ConvexSet(null, lines))
+    })
   },
   addConvexSet: function ({ commit }, ConvexSet) {
     commit('addConvexSet', ConvexSet)
