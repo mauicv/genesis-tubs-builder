@@ -6,15 +6,12 @@ function draw(ctx){
   drawCtx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
 
   ctx.convexSets.forEach(function(set){
-    set.lines.forEach(function(line){
-      drawLine(line, drawCtx)
-    })
+    drawConvexSet(set, drawCtx, 'white')
   })
 
   drawCtx.strokeStyle="blue";
   if(ctx.selection == 'Convex Set') {
     ctx.memory.forEach(function(point, index){
-      console.log(ctx)
       if(index < ctx.memory.length - 1) {
         drawCtx.beginPath();
         drawCtx.moveTo(...point.x);
@@ -33,10 +30,22 @@ function draw(ctx){
     drawCtx.lineTo(...ctx.x.x);
     drawCtx.stroke();
   }
+
+  if(ctx.focus) {
+    if (ctx.focus instanceof primatives.ConvexSet) {
+      drawConvexSet(ctx.focus, drawCtx, 'red')
+    }
+  }
 }
 
-function drawLine(line, drawCtx){
-  drawCtx.strokeStyle="white";
+function drawConvexSet(set, drawCtx, color){
+  set.lines.forEach(function(line){
+    drawLine(line, drawCtx, color)
+  })
+}
+
+function drawLine(line, drawCtx, color = 'white'){
+  drawCtx.strokeStyle=color;
   drawCtx.beginPath();
   drawCtx.moveTo(line.from.x[0],line.from.x[1]);
   drawCtx.lineTo(line.to.x[0],line.to.x[1]);

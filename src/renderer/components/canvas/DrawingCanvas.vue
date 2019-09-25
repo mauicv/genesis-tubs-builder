@@ -19,6 +19,7 @@
 <script>
   var primatives = require('../../../primatives/primatives.js')
   import { addPointToConvextSet } from './js/convexSet'
+  import { detectNear } from './js/select'
   import { draw } from './js/draw'
   import { mapGetters, mapActions } from 'vuex'
 
@@ -32,6 +33,7 @@
         memory: [],
         firstPoint: null,
         focus: null,
+        focused: false,
         x: null
       }
     },
@@ -70,12 +72,15 @@
       handleMouseClick(event) {
         var x = this.getCanvasLoc(event)
         var options = {
-          'Convex Set': addPointToConvextSet
+          'Convex Set': addPointToConvextSet,
+          'Select': detectNear,
         }[this.selection](x, this)
+        draw(this)
       },
       handleMouseDoubleClick(event) {
         var x = this.getCanvasLoc(event)
         this.clearToSelect()
+        draw(this)
       },
       getCanvasLoc(event){
         return {x: [

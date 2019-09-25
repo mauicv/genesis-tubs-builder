@@ -23,11 +23,19 @@ class Line {
   }
 
   perpDistance(x){
-    return gm.dot(gm.minus(x,this.from.x),gm.dev(gm.perp(gm.minus(this.to.x,this.from.x)),this.length));
+    var v_from_x = gm.minus(x, this.from.x)
+    var unit_normal = gm.dev(
+      gm.perp(gm.minus(this.to.x, this.from.x)),
+      gm.size(this.to.x, this.from.x))
+    return gm.dot(v_from_x, unit_normal);
   }
 
   horiDistance(x){
-    return gm.dot(gm.minus(x,this.from.x),gm.dev(gm.minus(this.to.x,this.from.x),this.length));
+    var v_from_x = gm.minus(x, this.from.x)
+    var tangent_normal = gm.dev(
+      gm.minus(this.to.x,this.from.x),
+      gm.size(this.to.x, this.from.x))
+    return gm.dot(v_from_x, tangent_normal);
   }
 
   distanceFrom(x){
@@ -42,6 +50,8 @@ class ConvexSet {
       var newLine = new Line(points[i],points[(i+1)%points.length]);
       this.lines.push(newLine);
     }
+
+    this.fixAntiClockwiseOrientaion()
   }
 
   distanceFrom(x){
@@ -56,6 +66,28 @@ class ConvexSet {
 
     return d_max;
   }
+
+  fixAntiClockwiseOrientaion(){
+		if(this.lines[0].perpDistance(this.lines[1].to.x)>0){
+			this.reverseOrient();
+		}
+	}
+
+  reverseOrient(){
+		var temp=0;
+		this.lines.forEach(function(link){
+			temp=link.from;
+			link.from=link.to;
+			link.to=temp;
+		});
+
+		var numLines=this.lines.length;
+		var tempLines=this.lines.slice();
+
+		tempLines.forEach(function(link,index){
+			this.lines[numLines-index-1]=link;
+		},this);
+	}
 }
 
 export { Point, Line, ConvexSet }
