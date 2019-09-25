@@ -1,5 +1,5 @@
 
-var primatives = require('../../../../primatives/primatives.js')
+var primatives = require('../../../primatives/primatives.js')
 
 function draw(ctx){
   var drawCtx = ctx.canvas.getContext("2d");

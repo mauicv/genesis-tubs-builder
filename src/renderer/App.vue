@@ -46,14 +46,6 @@
                             },
                             {
                                 href: '/',
-                                title: 'Glue'
-                            },
-                            {
-                                href: '/',
-                                title: 'Joint'
-                            },
-                            {
-                                href: '/',
                                 title: 'Link'
                             },
                             {

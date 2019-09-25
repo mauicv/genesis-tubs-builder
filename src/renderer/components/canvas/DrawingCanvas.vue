@@ -1,10 +1,5 @@
 <template>
   <div id="wrapper">
-    <div class="badge">
-      <span style="color: white;">
-        ACTION: {{selection}}
-      </span>
-    </div>
     <span class="title">
       Genesis Tubs Environment builder
     </span>
@@ -13,27 +8,33 @@
       v-on:click="handleMouseClick"
       v-on:dblclick="handleMouseDoubleClick"
       id="DrawingBoard"/>
+    <edit-bar
+      :focus="focus"
+    />
+    <zoom-bar style="float: right;"/>
   </div>
 </template>
 
 <script>
   var primatives = require('../../../primatives/primatives.js')
-  import { addPointToConvextSet } from './js/convexSet'
-  import { detectNear } from './js/select'
-  import { draw } from './js/draw'
+  import { addPointToConvextSet } from '../js/convexSet'
+  import { detectNear } from '../js/select'
+  import { draw } from '../js/draw'
   import { mapGetters, mapActions } from 'vuex'
+  import EditBar from '../EditBar/EditBar.vue'
+  import ZoomBar from '../ZoomBar/ZoomBar.vue'
 
   export default {
     name: 'drawing-canvas',
+    components: {
+      'edit-bar': EditBar,
+      'zoom-bar': ZoomBar
+    },
     data: function () {
       return {
-        canvas: null,
-        canvasLeft: null,
-        canvasTop: null,
         memory: [],
         firstPoint: null,
         focus: null,
-        focused: false,
         x: null
       }
     },
@@ -42,7 +43,10 @@
         'points',
         'lines',
         'convexSets',
-        'selection'
+        'selection',
+        'canvas',
+        'canvasLeft',
+        'canvasTop'
       ])
     },
     watch: {
@@ -54,18 +58,11 @@
     },
     mounted(){
       var canvas = document.getElementById("DrawingBoard");
-      this.canvas = canvas
-      var WIDTH = document.documentElement.clientWidth-160;
-	    var HEIGHT = document.documentElement.clientHeight-160;
-      canvas.width = WIDTH;
-		  canvas.height = HEIGHT;
-      var rect = canvas.getBoundingClientRect();
-      this.canvasTop = rect.top
-      this.canvasLeft = rect.left
+      this.setCanvas(canvas)
       this.clearToSelect()
     },
     methods: {
-      ...mapActions(['setSelection', 'addConvexSet']),
+      ...mapActions(['setSelection', 'addConvexSet', 'setCanvas']),
       handleMouseMove(event) {
         var x = this.getCanvasLoc(event)
         if(this.memory.length > 0) this.x = x
@@ -93,13 +90,14 @@
         this.setSelection('Select')
         this.memory = []
         this.x = null
+        this.focus = null
       }
     }
   }
 
 </script>
 
-<style>
+<style scoped>
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
   * {

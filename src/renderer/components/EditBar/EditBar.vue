@@ -1,21 +1,58 @@
 <template>
-  <div class="badge">
-    <span style="color: white;">
-      ACTION: {{selection}}
-    </span>
+  <div>
+    <div v-if="focus != null">
+      <div class="badge">
+        <span style="color: white;">
+          ACTION: {{selection}}
+        </span>
+      </div>
+      <div class="badge">
+        <span style="color: white;">
+          DELETE
+        </span>
+      </div>
+      <div
+          v-if="canGlue"
+          v-on:click="setGlueMode"
+          class="badge"
+          :style="`background-color: ${
+            selection == 'Glue' ? 'lightblue' : 'grey'
+          }`">
+        <span style="color: white;">
+          ADD GLUE
+        </span>
+      </div>
+      <div
+          v-if="canJoin"
+          class="badge"
+          v-on:click="setJointMode"
+          :style="`background-color: ${
+            selection == 'Joint' ? 'lightblue' : 'grey'
+          }`"
+        >
+        <span style="color: white;">
+          ADD JOINT
+        </span>
+      </div>
+    </div>
+    <div v-else class="badge">
+      <span style="color: white;">
+        ACTION: {{selection}}
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
   var primatives = require('../../../primatives/primatives.js')
-  import { addPointToConvextSet } from './js/convexSet'
-  import { detectNear } from './js/select'
-  import { draw } from './js/draw'
+  import { addPointToConvextSet } from '../js/convexSet'
+  import { detectNear } from '../js/select'
+  import { draw } from '../js/draw'
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
-    name: 'edit-page',
-    props: ['details', 'options']
+    name: 'edit-bar',
+    props: ['focus'],
     data: function () {
       return {}
     },
@@ -25,16 +62,26 @@
         'lines',
         'convexSets',
         'selection'
-      ])
+      ]),
+      canGlue: function(){
+        if(!this.focus) return
+        return this.convexSets.some((set)=>this.focus.sideAligned(set))
+      },
+      canJoin: function(){
+        if(!this.focus) return
+        return this.convexSets.some((set)=>this.focus.pointInCommon(set))
+      },
     },
     methods: {
-      ...mapActions([]),
+      ...mapActions(['setSelection']),
+      setGlueMode: function(){this.setSelection('Glue')},
+      setJointMode: function(){this.setSelection('Joint')}
     }
   }
 
 </script>
 
-<style>
+<style scoped>
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
   * {

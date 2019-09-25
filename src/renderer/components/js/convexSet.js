@@ -1,5 +1,5 @@
 
-var primatives = require('../../../../primatives/primatives.js')
+var primatives = require('../../../primatives/primatives.js')
 
 function addPointToConvextSet(x, ctx){
   var newPoint;

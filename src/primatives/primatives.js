@@ -22,6 +22,16 @@ class Line {
     this.to=to
   }
 
+  coAligned(line){
+    var aligned =
+      line.from.distanceFrom(this.from) == 0 &&
+      line.to.distanceFrom(this.to) == 0;
+    var reverseAligned =
+      line.to.distanceFrom(this.from) == 0 &&
+      line.from.distanceFrom(this.to) == 0;
+    return aligned || reverseAligned
+  }
+
   perpDistance(x){
     var v_from_x = gm.minus(x, this.from.x)
     var unit_normal = gm.dev(
@@ -56,6 +66,29 @@ class ConvexSet {
     }
 
     this.fixAntiClockwiseOrientaion()
+  }
+
+  toPoints(){
+    return this.lines.map((line)=>line.from)
+  }
+
+  sideAligned(convexSet){
+    if(this == convexSet) return false
+    return this.lines.some(function(thisLine){
+      return convexSet.lines.some(function(otherLine){
+        return thisLine.coAligned(otherLine)
+      })
+    })
+  }
+
+  pointInCommon(convexSet){
+    if(this == convexSet) return false
+    if(this.sideAligned(convexSet)) return false
+    return this.toPoints().some(function(thisPoint){
+      return convexSet.toPoints().some(function(otherPoint){
+        return thisPoint.distanceFrom(otherPoint) == 0
+      })
+    })
   }
 
   distanceFrom(x){
