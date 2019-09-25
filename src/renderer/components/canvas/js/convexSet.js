@@ -7,9 +7,7 @@ function addPointToConvextSet(x, ctx){
   if (ctx.firstPoint && ctx.firstPoint.distanceFrom(x) < 6) {
     var newConvexSet = new primatives.ConvexSet(ctx.memory)
     ctx.addConvexSet(newConvexSet)
-    ctx.memory = []
-    ctx.x = null
-    ctx.firstPoint = null
+    ctx.clearToSelect()
     return
   }
 

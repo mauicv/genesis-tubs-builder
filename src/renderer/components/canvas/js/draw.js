@@ -3,7 +3,8 @@ var primatives = require('../../../../primatives/primatives.js')
 
 function draw(ctx){
   var drawCtx = ctx.canvas.getContext("2d");
-  drawCtx.fillStyle="white";
+  drawCtx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+
   ctx.convexSets.forEach(function(set){
     set.lines.forEach(function(line){
       drawLine(line, drawCtx)
@@ -35,6 +36,7 @@ function draw(ctx){
 }
 
 function drawLine(line, drawCtx){
+  drawCtx.strokeStyle="white";
   drawCtx.beginPath();
   drawCtx.moveTo(line.from.x[0],line.from.x[1]);
   drawCtx.lineTo(line.to.x[0],line.to.x[1]);

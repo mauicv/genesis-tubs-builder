@@ -44,21 +44,11 @@
       ])
     },
     watch: {
-      points(newValue, oldValue) {
-        draw(this)
-      },
-      lines(newValue, oldValue) {
-        draw(this)
-      },
-      memory(memories){
-        draw(this)
-      },
-      convexSets(newValue, oldValue) {
-        draw(this)
-      },
-      x(x){
-        draw(this)
-      }
+      points(newValue, oldValue) { draw(this) },
+      lines(newValue, oldValue) { draw(this) },
+      memory(memories){ draw(this) },
+      convexSets(newValue, oldValue) { draw(this) },
+      x(x){ draw(this) }
     },
     mounted(){
       var canvas = document.getElementById("DrawingBoard");
@@ -85,9 +75,7 @@
       },
       handleMouseDoubleClick(event) {
         var x = this.getCanvasLoc(event)
-        this.setSelection('Select')
-        this.memory = []
-        this.x = null
+        this.clearToSelect()
       },
       getCanvasLoc(event){
         return {x: [
@@ -95,6 +83,11 @@
           event.clientY - this.canvasTop
         ]}
       },
+      clearToSelect(){
+        this.setSelection('Select')
+        this.memory = []
+        this.x = null
+      }
     }
   }
 

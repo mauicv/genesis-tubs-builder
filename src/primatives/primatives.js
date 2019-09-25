@@ -8,7 +8,7 @@ class Point {
   }
 
   copy(){
-    return Point(this.x[0], this.x[1])
+    return new Point(this.x)
   }
 
   distanceFrom(point){

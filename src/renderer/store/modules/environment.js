@@ -19,6 +19,11 @@ const getters = {
 const mutations = {
   addConvexSet (state, convexSet) {
     state.convexSets.push(convexSet)
+    convexSet.lines.forEach((line)=>{
+      state.lines.push(line)
+      state.points.push(line.from)
+      state.points.push(line.to)
+    })
     console.log(state)
   },
   save (state) {
