@@ -53,9 +53,16 @@ class Line {
   }
 }
 
+class Glue {
+  constructor(sides){
+    this.sides = sides
+  }
+}
+
 class ConvexSet {
   constructor(points, lines){
     this.lines = []
+    this.glues = []
     if (lines == null) {
       for(var i=0;i<points.length;i++){
         var newLine = new Line(points[i],points[(i+1)%points.length]);
@@ -87,6 +94,19 @@ class ConvexSet {
     })
   }
 
+  getAlignedSides(convexSet){
+    if(this == convexSet) return false
+    var alignedLines = false
+    this.lines.forEach(function(thisLine){
+      return convexSet.lines.forEach(function(otherLine){
+        if (thisLine.coAligned(otherLine)) {
+          alignedLines = [thisLine, otherLine]
+        }
+      })
+    })
+    return alignedLines
+  }
+
   pointInCommon(convexSet){
     if(this == convexSet) return false
     if(this.sideAligned(convexSet)) return false
@@ -96,6 +116,16 @@ class ConvexSet {
       })
     })
   }
+
+  // getPointInCommon(convexSet){
+  //   if(this == convexSet) return false
+  //   if(this.sideAligned(convexSet)) return false
+  //   return this.toPoints().forEach(function(thisPoint){
+  //     return convexSet.toPoints().forEach(function(otherPoint){
+  //       return thisPoint.distanceFrom(otherPoint) == 0
+  //     })
+  //   })
+  // }
 
   distanceFrom(x){
     var d_max=-10000;
@@ -133,4 +163,4 @@ class ConvexSet {
 	}
 }
 
-export { Point, Line, ConvexSet }
+export { Point, Line, Glue, ConvexSet }

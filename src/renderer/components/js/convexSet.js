@@ -1,6 +1,8 @@
 
 var primatives = require('../../../primatives/primatives.js')
 
+import { detectNear } from '../js/select'
+
 function addPointToConvextSet(x, ctx){
   var newPoint;
 
@@ -20,4 +22,19 @@ function addPointToConvextSet(x, ctx){
   ctx.memory.push(newPoint)
 }
 
-export { addPointToConvextSet }
+function addGlue(x, ctx){
+  var secondConvexSet = null;
+  ctx.convexSets
+    .filter((set)=>set.sideAligned(ctx.focus))
+    .forEach(function(set){
+      if(set.distanceFrom(x.x)<6){
+        secondConvexSet=set;
+      }
+    });
+  if(secondConvexSet) {
+    ctx.addGlue([ctx.focus, secondConvexSet])
+    ctx.clearToSelect()
+  }
+}
+
+export { addPointToConvextSet, addGlue }

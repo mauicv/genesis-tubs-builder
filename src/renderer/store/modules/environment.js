@@ -8,6 +8,8 @@ const state = {
   points: [],
   lines: [],
   convexSets: [],
+  glues: [],
+  joints: [],
   scale: 1,
   canvas: null,
   canvasTop: null,
@@ -19,6 +21,8 @@ const getters = {
   points: (state)=>state.points,
   lines: (state)=>state.lines,
   convexSets: (state)=>state.convexSets,
+  glues: (state)=>state.glues,
+  joints: (state)=>state.joints,
   canvas: (state)=>state.canvas,
   canvasTop: (state)=>state.canvasTop,
   canvasLeft: (state)=>state.canvasLeft,
@@ -54,6 +58,8 @@ const mutations = {
     state.points = []
     state.lines = []
     state.convexSets = []
+    state.joints = []
+    state.glues = []
   },
   zoom (state, amount) {
     var points = []
@@ -79,6 +85,26 @@ const mutations = {
       .filter((line)=>!convexSet.lines.includes(line))
     state.points = state.points
       .filter((point)=>!convexSet.toAllPoints().includes(point))
+  },
+  addGlue(state, convexSets){
+    var lines = convexSets[0].getAlignedSides(convexSets[1])
+    var newGlue = new primatives.Glue(lines)
+    console.log(newGlue)
+    state.glues = [...state.glues, newGlue]
+    convexSets[0].glues.push(newGlue)
+    convexSets[1].glues.push(newGlue)
+  },
+  removeGlues(state, convexSet){
+    var gluesToRemove = convexSet.glues
+    state.glues = state.glues
+      .filter((glue)=>!gluesToRemove.includes(glue))
+    state.convexSets.forEach(function(set){
+      set.glues = set.glues
+        .filter((glue)=>!gluesToRemove.includes(glue))
+    })
+  },
+  addJoint(state, convesSets){
+    console.log(convesSets)
   },
   convertJSONGTEtoJSON (state) {
     ```
@@ -117,6 +143,7 @@ const actions = {
     commit('save')
   },
   load: function ({ commit }) {
+    // add glues and joints
     commit('clean')
     var dir = loc.substring(0, loc.lastIndexOf('/'));
     if (dir != '') {dir=`${dir}/`}
@@ -145,7 +172,16 @@ const actions = {
   },
   deleteConvexSet: function({ commit }, convexSet){
     commit('deleteConvexSet', convexSet)
-  }
+  },
+  addGlue: function({ commit }, convexSets){
+    commit('addGlue', convexSets)
+  },
+  removeGlues: function({ commit }, convexSet){
+    commit('removeGlues', convexSet)
+  },
+  addJoint: function({ commit }, convexSets){
+    commit('addJoint', convexSets)
+  },
 }
 
 export default {

@@ -26,6 +26,15 @@
         </span>
       </div>
       <div
+          v-if="focus.glues.length>0"
+          v-on:click="removeConvexSetGlues"
+          class="badge"
+          >
+        <span style="color: white;">
+          REMOVE ALL GLUES
+        </span>
+      </div>
+      <div
           v-if="canJoin"
           class="badge"
           v-on:click="setJointMode"
@@ -76,13 +85,16 @@
       },
     },
     methods: {
-      ...mapActions(['setSelection', 'deleteConvexSet']),
+      ...mapActions(['setSelection', 'deleteConvexSet', 'removeGlues']),
       setGlueMode: function(){this.setSelection('Glue')},
       setJointMode: function(){this.setSelection('Joint')},
       deleteFocus: function(){
         this.deleteConvexSet(this.focus)
         this.setSelection('Select')
         this.$emit('remove-focus')
+      },
+      removeConvexSetGlues: function(){
+        this.removeGlues(this.focus)
       }
     }
   }

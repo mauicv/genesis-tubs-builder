@@ -19,7 +19,7 @@
 
 <script>
   var primatives = require('../../../primatives/primatives.js')
-  import { addPointToConvextSet } from '../js/convexSet'
+  import { addPointToConvextSet, addGlue } from '../js/convexSet'
   import { detectNear } from '../js/select'
   import { draw } from '../js/draw'
   import { mapGetters, mapActions } from 'vuex'
@@ -48,7 +48,9 @@
         'selection',
         'canvas',
         'canvasLeft',
-        'canvasTop'
+        'canvasTop',
+        'glues',
+        'joints'
       ])
     },
     watch: {
@@ -56,6 +58,8 @@
       lines(newValue, oldValue) { draw(this) },
       memory(memories){ draw(this) },
       convexSets(newValue, oldValue) { draw(this) },
+      glues(newValue, oldValue) { draw(this) },
+      joints(newValue, oldValue) { draw(this) },
       x(x){ draw(this) }
     },
     mounted(){
@@ -65,7 +69,14 @@
       window.addEventListener('keypress', this.handleKeyPress)
     },
     methods: {
-      ...mapActions(['setSelection', 'addConvexSet', 'setCanvas', 'move', 'zoom']),
+      ...mapActions([
+        'setSelection',
+        'addConvexSet',
+        'setCanvas',
+        'move',
+        'zoom',
+        'addGlue'
+      ]),
       handleMouseMove(event) {
         var x = this.getCanvasLoc(event)
         if(this.memory.length > 0) this.x = x
@@ -75,6 +86,8 @@
         var options = {
           'Convex Set': addPointToConvextSet,
           'Select': detectNear,
+          'Glue': addGlue,
+          // 'Joint': addJoint,
         }[this.selection](x, this)
         draw(this)
       },

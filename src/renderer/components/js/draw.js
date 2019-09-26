@@ -36,6 +36,10 @@ function draw(ctx){
       drawConvexSet(ctx.focus, drawCtx, 'red')
     }
   }
+
+  ctx.glues.forEach(function(glue){
+    glue.sides.forEach((line)=>drawLine(line, drawCtx, 'black'))
+  })
 }
 
 function drawConvexSet(set, drawCtx, color){
