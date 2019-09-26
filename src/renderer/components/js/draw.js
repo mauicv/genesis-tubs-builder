@@ -35,6 +35,8 @@ function draw(ctx){
   if(ctx.focus) {
     if (ctx.focus instanceof primatives.ConvexSet) {
       drawConvexSet(ctx.focus, drawCtx, 'red')
+    } else if (ctx.focus instanceof primatives.Point) {
+      drawPoint(ctx.focus, drawCtx, 'red')
     }
   }
 
@@ -43,6 +45,14 @@ function draw(ctx){
   })
 
   ctx.joints.forEach((joint)=>drawJoint(joint, drawCtx, 'grey'))
+  ctx.links.forEach((link)=>drawLine(link, drawCtx, 'orange'))
+}
+
+function drawPoint(point, drawCtx, color){
+  drawCtx.strokeStyle = color;
+  drawCtx.beginPath();
+  drawCtx.arc(point.x[0], point.x[1], 6, 0, 2*Math.PI);
+  drawCtx.stroke();
 }
 
 function drawJoint(joint, drawCtx, color){

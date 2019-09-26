@@ -10,16 +10,18 @@
       v-on:keydown.native="keymonitor"
       id="DrawingBoard"/>
     <edit-bar
+      v-if="convexSetSelected"
       :focus="focus"
       @remove-focus="clearToSelect"
     />
-    <zoom-bar style="float: right;"/>
+    <!-- <zoom-bar style="float: right;"/> -->
   </div>
 </template>
 
 <script>
   var primatives = require('../../../primatives/primatives.js')
   import { addPointToConvextSet, addGlue, addJoint } from '../js/convexSet'
+  import { addLink } from '../js/links'
   import { detectNear } from '../js/select'
   import { draw } from '../js/draw'
   import { mapGetters, mapActions } from 'vuex'
@@ -50,8 +52,12 @@
         'canvasLeft',
         'canvasTop',
         'glues',
-        'joints'
-      ])
+        'joints',
+        'links'
+      ]),
+      convexSetSelected(){
+        return this.focus instanceof primatives.ConvexSet
+      }
     },
     watch: {
       points(newValue, oldValue) { draw(this) },
@@ -76,7 +82,8 @@
         'move',
         'zoom',
         'addGlue',
-        'addJoint'
+        'addJoint',
+        'addLink'
       ]),
       handleMouseMove(event) {
         var x = this.getCanvasLoc(event)
@@ -89,6 +96,7 @@
           'Select': detectNear,
           'Glue': addGlue,
           'Joint': addJoint,
+          'Link': addLink,
         }[this.selection](x, this)
         draw(this)
       },

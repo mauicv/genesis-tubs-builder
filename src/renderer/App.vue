@@ -56,36 +56,6 @@
                     },
                     {
                         href: '/',
-                        title: 'Remove',
-                        icon: 'glyphicon glyphicon-minus-sign',
-                        child: [
-                            {
-                                href: '/',
-                                title: 'Delete Structure'
-                            },
-                        ]
-                    },
-                    {
-                        href: '/',
-                        title: 'Selection',
-                        icon: 'glyphicon glyphicon-record',
-                        child: [
-                            {
-                                href: '/',
-                                title: 'Zoom on Selection'
-                            },
-                            {
-                                href: '/',
-                                title: 'Zoom'
-                            },
-                            {
-                                href: '/',
-                                title: 'Reset'
-                            }
-                        ]
-                    },
-                    {
-                        href: '/',
                         title: 'Run',
                         icon: 'glyphicon glyphicon-play',
                     }

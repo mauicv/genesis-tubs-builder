@@ -10,11 +10,12 @@ const state = {
   convexSets: [],
   glues: [],
   joints: [],
+  links: [],
   scale: 1,
   canvas: null,
   canvasTop: null,
   canvasLeft: null,
-  center: null
+  center: null,
 }
 
 const getters = {
@@ -23,6 +24,7 @@ const getters = {
   convexSets: (state)=>state.convexSets,
   glues: (state)=>state.glues,
   joints: (state)=>state.joints,
+  links: (state)=>state.links,
   canvas: (state)=>state.canvas,
   canvasTop: (state)=>state.canvasTop,
   canvasLeft: (state)=>state.canvasLeft,
@@ -120,6 +122,10 @@ const mutations = {
         .filter((joint)=>!jointsToRemove.includes(joint))
     })
   },
+  addLink(state, points) {
+    var newLink = new primatives.Line(...points)
+    state.links = [...state.links, newLink]
+  },
   convertJSONGTEtoJSON (state) {
     ```
     Used to convert a genesis-tubs physics environment stored as json into the
@@ -201,6 +207,9 @@ const actions = {
   removeJoints: function({ commit }, convexSets){
     commit('removeJoints', convexSets)
   },
+  addLink: function({ commit }, points) {
+    commit('addLink', points)
+  }
 }
 
 export default {

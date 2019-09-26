@@ -2,11 +2,6 @@
   <div>
     <div v-if="focus != null">
       <div class="badge">
-        <span style="color: white;">
-          ACTION: {{selection}}
-        </span>
-      </div>
-      <div class="badge">
         <span
             style="color: white;"
             v-on:click="deleteFocus"

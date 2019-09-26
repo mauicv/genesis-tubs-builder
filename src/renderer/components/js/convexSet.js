@@ -1,8 +1,6 @@
 
 var primatives = require('../../../primatives/primatives.js')
 
-import { detectNear } from '../js/select'
-
 function addPointToConvextSet(x, ctx){
   var newPoint;
 
