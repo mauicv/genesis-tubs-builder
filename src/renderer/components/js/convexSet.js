@@ -37,4 +37,20 @@ function addGlue(x, ctx){
   }
 }
 
-export { addPointToConvextSet, addGlue }
+function addJoint(x, ctx){
+  var secondConvexSet = null;
+  ctx.convexSets
+    .filter((set)=>set.pointInCommon(ctx.focus))
+    .forEach(function(set){
+      if(set.distanceFrom(x.x)<6){
+        secondConvexSet=set;
+      }
+    });
+
+  if(secondConvexSet) {
+    ctx.addJoint([ctx.focus, secondConvexSet])
+    ctx.clearToSelect()
+  }
+}
+
+export { addPointToConvextSet, addGlue, addJoint }

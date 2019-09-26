@@ -1,5 +1,6 @@
 
 var primatives = require('../../../primatives/primatives.js')
+const gm = require('genesis-tubs-engine').GeneralMethods
 
 function draw(ctx){
   var drawCtx = ctx.canvas.getContext("2d");
@@ -40,6 +41,15 @@ function draw(ctx){
   ctx.glues.forEach(function(glue){
     glue.sides.forEach((line)=>drawLine(line, drawCtx, 'black'))
   })
+
+  ctx.joints.forEach((joint)=>drawJoint(joint, drawCtx, 'grey'))
+}
+
+function drawJoint(joint, drawCtx, color){
+  drawCtx.strokeStyle = color;
+  drawCtx.beginPath();
+  drawCtx.arc(joint.point.x[0], joint.point.x[1], 6, 0, 2*Math.PI);
+  drawCtx.stroke();
 }
 
 function drawConvexSet(set, drawCtx, color){

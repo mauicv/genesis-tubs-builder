@@ -87,9 +87,9 @@ const mutations = {
       .filter((point)=>!convexSet.toAllPoints().includes(point))
   },
   addGlue(state, convexSets){
+    if(convexSets[0].isGluedTo(convexSets[1])) return
     var lines = convexSets[0].getAlignedSides(convexSets[1])
     var newGlue = new primatives.Glue(lines)
-    console.log(newGlue)
     state.glues = [...state.glues, newGlue]
     convexSets[0].glues.push(newGlue)
     convexSets[1].glues.push(newGlue)
@@ -103,8 +103,16 @@ const mutations = {
         .filter((glue)=>!gluesToRemove.includes(glue))
     })
   },
-  addJoint(state, convesSets){
-    console.log(convesSets)
+  addJoint(state, convexSets){
+    if(convexSets[0].isJointTo(convexSets[1])) return
+    var linePairs = convexSets[0].getIncidentSides(convexSets[1])
+    var newJoint = new primatives.Joint(linePairs)
+    state.joints = [...state.joints, newJoint]
+    convexSets[0].joints.push(newJoint)
+    convexSets[1].joints.push(newJoint)
+  },
+  removeJoints(state, convexSet){
+    console.log(convexSets)
   },
   convertJSONGTEtoJSON (state) {
     ```
@@ -181,6 +189,9 @@ const actions = {
   },
   addJoint: function({ commit }, convexSets){
     commit('addJoint', convexSets)
+  },
+  removeJoints: function({ commit }, convexSets){
+    commit('removeJoint', convexSets)
   },
 }
 

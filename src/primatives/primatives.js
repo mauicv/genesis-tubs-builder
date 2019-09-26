@@ -32,6 +32,16 @@ class Line {
     return aligned || reverseAligned
   }
 
+  incident(line){
+    var fromIncident =
+      line.from.distanceFrom(this.from) == 0 ||
+      line.to.distanceFrom(this.to) == 0;
+    var toIncident =
+      line.to.distanceFrom(this.from) == 0 ||
+      line.from.distanceFrom(this.to) == 0;
+    return fromIncident || toIncident
+  }
+
   perpDistance(x){
     var v_from_x = gm.minus(x, this.from.x)
     var unit_normal = gm.dev(
@@ -59,10 +69,30 @@ class Glue {
   }
 }
 
+class Joint {
+  constructor(linePairs){
+    var linePair1 = linePairs[0]
+    var linePair2 = linePairs[1]
+    this.line1 = linePair1[0]
+    this.line2 = linePair2[0]
+    var points1 = [linePair1[0].from, linePair1[0].to]
+    var points2 = [linePair2[0].from, linePair2[0].to]
+    points1.forEach(function(thisPoint){
+      points2.forEach(function(thatPoint){
+        if (thisPoint.distanceFrom(thatPoint) == 0) {
+          this.point = thisPoint
+        }
+      }, this)
+    }, this)
+  }
+}
+
 class ConvexSet {
   constructor(points, lines){
     this.lines = []
     this.glues = []
+    this.joints = []
+
     if (lines == null) {
       for(var i=0;i<points.length;i++){
         var newLine = new Line(points[i],points[(i+1)%points.length]);
@@ -107,6 +137,14 @@ class ConvexSet {
     return alignedLines
   }
 
+  isGluedTo(convexSet){
+    return this.glues.some(function(thisGlue){
+      return convexSet.glues.some(function(thatGlue){
+        return thisGlue == thatGlue
+      })
+    })
+  }
+
   pointInCommon(convexSet){
     if(this == convexSet) return false
     if(this.sideAligned(convexSet)) return false
@@ -117,15 +155,31 @@ class ConvexSet {
     })
   }
 
-  // getPointInCommon(convexSet){
-  //   if(this == convexSet) return false
-  //   if(this.sideAligned(convexSet)) return false
-  //   return this.toPoints().forEach(function(thisPoint){
-  //     return convexSet.toPoints().forEach(function(otherPoint){
-  //       return thisPoint.distanceFrom(otherPoint) == 0
-  //     })
-  //   })
-  // }
+  getIncidentSides(convexSet){
+    if(this == convexSet) return false
+    if(this.sideAligned(convexSet)) return false
+    var thisIncidentLines = []
+    var thoseIncidentLines = []
+    this.lines.forEach(function(thisLine){
+      convexSet.lines.forEach(function(thatLine){
+        if(thisLine.incident(thatLine)){
+          if (!thisIncidentLines.includes(thisLine))
+            thisIncidentLines.push(thisLine)
+          if (!thoseIncidentLines.includes(thatLine))
+            thoseIncidentLines.push(thatLine)
+        }
+      })
+    })
+    return [thisIncidentLines, thoseIncidentLines]
+  }
+
+  isJointTo(convexSet){
+    return this.joints.some(function(thisJoint){
+      return convexSet.joints.some(function(thatJoint){
+        return thisJoint == thatJoint 
+      })
+    })
+  }
 
   distanceFrom(x){
     var d_max=-10000;
@@ -163,4 +217,4 @@ class ConvexSet {
 	}
 }
 
-export { Point, Line, Glue, ConvexSet }
+export { Point, Line, Glue, Joint, ConvexSet }
