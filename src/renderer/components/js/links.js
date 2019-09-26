@@ -16,7 +16,7 @@ function addLink(x, ctx){
 
   if(closePoint == null) return
   if(ctx.focus == null) {
-    ctx.focus = closePoint;
+    ctx.setFocus(closePoint);
     return
   }
   ctx.addLink([ctx.focus, closePoint])

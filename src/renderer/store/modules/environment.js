@@ -16,6 +16,7 @@ const state = {
   canvasTop: null,
   canvasLeft: null,
   center: null,
+  focus: null
 }
 
 const getters = {
@@ -28,10 +29,14 @@ const getters = {
   canvas: (state)=>state.canvas,
   canvasTop: (state)=>state.canvasTop,
   canvasLeft: (state)=>state.canvasLeft,
+  focus: (state)=>state.focus
 }
 
 
 const mutations = {
+  setFocus(state, object){
+    state.focus = object
+  },
   setCanvas(state, canvas){
     var WIDTH = document.documentElement.clientWidth-160;
     var HEIGHT = document.documentElement.clientHeight-160;
@@ -62,6 +67,7 @@ const mutations = {
     state.convexSets = []
     state.joints = []
     state.glues = []
+    state.links = []
   },
   zoom (state, amount) {
     var points = []
@@ -209,6 +215,9 @@ const actions = {
   },
   addLink: function({ commit }, points) {
     commit('addLink', points)
+  },
+  setFocus: function({ commit }, object) {
+    commit('setFocus', object)
   }
 }
 

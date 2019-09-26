@@ -63,11 +63,23 @@
             }
         },
         methods: {
-          ...mapActions(['save', 'load', 'setSelection']),
+          ...mapActions([
+            'save',
+            'load',
+            'setSelection',
+            'setFocus'
+          ]),
           onItemClick(event, item) {
-            if (item.title == 'Save') { this.save() }
-            if (item.title == 'Load') { this.load() }
-            else {
+            if (item.title == 'Save') {
+              this.save()
+              this.setSelection('Select')
+            } else if (item.title == 'Load') {
+              this.load();
+              this.setSelection('Select')
+            } else if (item.title == 'Link') {
+              this.setSelection(item.title)
+              this.setFocus(null)
+            } else {
               this.setSelection(item.title)
             }
           }

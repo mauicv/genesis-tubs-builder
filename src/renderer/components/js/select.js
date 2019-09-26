@@ -11,8 +11,7 @@ function detectNear(x, ctx){
       }
     }
   });
-
-  ctx.focus = focus
+  ctx.setFocus(focus);
 }
 
 export { detectNear }

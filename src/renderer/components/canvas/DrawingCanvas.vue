@@ -38,7 +38,6 @@
       return {
         memory: [],
         firstPoint: null,
-        focus: null,
         x: null
       }
     },
@@ -53,7 +52,8 @@
         'canvasTop',
         'glues',
         'joints',
-        'links'
+        'links',
+        'focus'
       ]),
       convexSetSelected(){
         return this.focus instanceof primatives.ConvexSet
@@ -66,7 +66,8 @@
       convexSets(newValue, oldValue) { draw(this) },
       glues(newValue, oldValue) { draw(this) },
       joints(newValue, oldValue) { draw(this) },
-      x(x){ draw(this) }
+      focus(newValue, oldValue){ draw(this) },
+      x(x){ draw(this) },
     },
     mounted(){
       var canvas = document.getElementById("DrawingBoard");
@@ -83,13 +84,15 @@
         'zoom',
         'addGlue',
         'addJoint',
-        'addLink'
+        'addLink',
+        'setFocus'
       ]),
       handleMouseMove(event) {
         var x = this.getCanvasLoc(event)
         if(this.memory.length > 0) this.x = x
       },
       handleMouseClick(event) {
+        console.log(this.selection)
         var x = this.getCanvasLoc(event)
         var options = {
           'Convex Set': addPointToConvextSet,
@@ -115,7 +118,7 @@
         this.setSelection('Select')
         this.memory = []
         this.x = null
-        this.focus = null
+        this.setFocus(null)
       },
       handleKeyPress(event){
         if(event.key == 'w') {
