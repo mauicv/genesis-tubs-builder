@@ -112,7 +112,13 @@ const mutations = {
     convexSets[1].joints.push(newJoint)
   },
   removeJoints(state, convexSet){
-    console.log(convexSets)
+    var jointsToRemove = convexSet.joints
+    state.joints = state.joints
+      .filter((joint)=>!jointsToRemove.includes(joint))
+    state.convexSets.forEach(function(set){
+      set.joints = set.joints
+        .filter((joint)=>!jointsToRemove.includes(joint))
+    })
   },
   convertJSONGTEtoJSON (state) {
     ```
@@ -179,6 +185,8 @@ const actions = {
     commit('move', vector)
   },
   deleteConvexSet: function({ commit }, convexSet){
+    commit('removeGlues', convexSet)
+    commit('removeJoints', convexSet)
     commit('deleteConvexSet', convexSet)
   },
   addGlue: function({ commit }, convexSets){
@@ -191,7 +199,7 @@ const actions = {
     commit('addJoint', convexSets)
   },
   removeJoints: function({ commit }, convexSets){
-    commit('removeJoint', convexSets)
+    commit('removeJoints', convexSets)
   },
 }
 
