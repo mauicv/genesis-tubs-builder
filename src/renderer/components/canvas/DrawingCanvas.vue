@@ -9,9 +9,14 @@
       v-on:dblclick="handleMouseDoubleClick"
       v-on:keydown.native="keymonitor"
       id="DrawingBoard"/>
-    <edit-bar
+    <edit-convex-set-bar
       v-if="convexSetSelected"
       :focus="focus"
+      @remove-focus="clearToSelect"
+    />
+    <edit-structure-bar
+      v-if="structureModeSelected"
+      :memory="memory"
       @remove-focus="clearToSelect"
     />
     <!-- <zoom-bar style="float: right;"/> -->
@@ -22,16 +27,19 @@
   var primatives = require('../../../primatives/primatives.js')
   import { addPointToConvextSet, addGlue, addJoint } from '../js/convexSet'
   import { addLink } from '../js/links'
+  import { addStructure } from '../js/structures'
   import { detectNear } from '../js/select'
   import { draw } from '../js/draw'
   import { mapGetters, mapActions } from 'vuex'
-  import EditBar from '../EditBar/EditBar.vue'
+  import EditConvexSetBar from '../EditBar/EditConvexSetBar.vue'
+  import EditStructureBar from '../EditBar/EditStructureBar.vue'
   import ZoomBar from '../ZoomBar/ZoomBar.vue'
 
   export default {
     name: 'drawing-canvas',
     components: {
-      'edit-bar': EditBar,
+      'edit-convex-set-bar': EditConvexSetBar,
+      'edit-structure-bar': EditStructureBar,
       'zoom-bar': ZoomBar
     },
     data: function () {
@@ -53,10 +61,14 @@
         'glues',
         'joints',
         'links',
-        'focus'
+        'focus',
+        'structures'
       ]),
       convexSetSelected(){
         return this.focus instanceof primatives.ConvexSet
+      },
+      structureModeSelected(){
+        return this.selection == 'Structure'
       }
     },
     watch: {
@@ -89,7 +101,7 @@
       ]),
       handleMouseMove(event) {
         var x = this.getCanvasLoc(event)
-        if(this.memory.length > 0) this.x = x
+        if(this.selection == 'Convex Set' && this.memory.length > 0) this.x = x
       },
       handleMouseClick(event) {
         console.log(this.selection)
@@ -100,6 +112,7 @@
           'Glue': addGlue,
           'Joint': addJoint,
           'Link': addLink,
+          'Structure': addStructure
         }[this.selection](x, this)
         draw(this)
       },

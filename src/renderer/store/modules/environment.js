@@ -11,6 +11,7 @@ const state = {
   glues: [],
   joints: [],
   links: [],
+  structures: [],
   scale: 1,
   canvas: null,
   canvasTop: null,
@@ -29,7 +30,8 @@ const getters = {
   canvas: (state)=>state.canvas,
   canvasTop: (state)=>state.canvasTop,
   canvasLeft: (state)=>state.canvasLeft,
-  focus: (state)=>state.focus
+  focus: (state)=>state.focus,
+  structures: (state)=>state.structures
 }
 
 
@@ -132,6 +134,10 @@ const mutations = {
     var newLink = new primatives.Line(...points)
     state.links = [...state.links, newLink]
   },
+  addStructure(state, sets) {
+    var newStructure = new primatives.Structure(sets)
+    state.structures = [...state.structures, newStructure]
+  },
   convertJSONGTEtoJSON (state) {
     ```
     Used to convert a genesis-tubs physics environment stored as json into the
@@ -218,6 +224,9 @@ const actions = {
   },
   setFocus: function({ commit }, object) {
     commit('setFocus', object)
+  },
+  addStructure: function({ commit }, sets) {
+    commit('addStructure', sets)
   }
 }
 

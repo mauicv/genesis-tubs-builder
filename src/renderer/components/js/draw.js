@@ -46,6 +46,7 @@ function draw(ctx){
 
   ctx.joints.forEach((joint)=>drawJoint(joint, drawCtx, 'grey'))
   ctx.links.forEach((link)=>drawLine(link, drawCtx, 'orange'))
+  ctx.structures.forEach((structure)=>drawStructure(structure, drawCtx, getRandomColor()))
 }
 
 function drawPoint(point, drawCtx, color){
@@ -74,6 +75,22 @@ function drawLine(line, drawCtx, color = 'white'){
   drawCtx.moveTo(line.from.x[0],line.from.x[1]);
   drawCtx.lineTo(line.to.x[0],line.to.x[1]);
   drawCtx.stroke();
+}
+
+function drawStructure(structure, drawCtx, color){
+  drawCtx.strokeStyle=color;
+  drawCtx.beginPath();
+  structure.sets.forEach((set)=>drawConvexSet(set, drawCtx, color))
+  drawCtx.stroke();
+}
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 export { draw }

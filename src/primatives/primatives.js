@@ -176,7 +176,7 @@ class ConvexSet {
   isJointTo(convexSet){
     return this.joints.some(function(thisJoint){
       return convexSet.joints.some(function(thatJoint){
-        return thisJoint == thatJoint 
+        return thisJoint == thatJoint
       })
     })
   }
@@ -217,4 +217,10 @@ class ConvexSet {
 	}
 }
 
-export { Point, Line, Glue, Joint, ConvexSet }
+class Structure {
+  constructor(sets){
+    this.sets = sets
+  }
+}
+
+export { Point, Line, Glue, Joint, ConvexSet, Structure }

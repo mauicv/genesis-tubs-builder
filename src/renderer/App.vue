@@ -79,6 +79,9 @@
             } else if (item.title == 'Link') {
               this.setSelection(item.title)
               this.setFocus(null)
+            } else if (item.title == 'Structure') {
+              this.setSelection(item.title)
+              this.setFocus(null)
             } else {
               this.setSelection(item.title)
             }
