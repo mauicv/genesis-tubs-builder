@@ -134,9 +134,17 @@ const mutations = {
     var newLink = new primatives.Line(...points)
     state.links = [...state.links, newLink]
   },
+  removeLink(state, linkToRemove) {
+    state.links = state.links
+      .filter((link)=>link != linkToRemove)
+  },
   addStructure(state, sets) {
     var newStructure = new primatives.Structure(sets)
     state.structures = [...state.structures, newStructure]
+  },
+  removeStructure(state, structureToRemove) {
+    state.structures = state.structures
+      .filter((structure)=>structure != structureToRemove)
   },
   convertJSONGTEtoJSON (state) {
     ```
@@ -222,12 +230,18 @@ const actions = {
   addLink: function({ commit }, points) {
     commit('addLink', points)
   },
+  removeLink: function({ commit }, link) {
+    commit('removeLink', link)
+  },
   setFocus: function({ commit }, object) {
     commit('setFocus', object)
   },
   addStructure: function({ commit }, sets) {
     commit('addStructure', sets)
-  }
+  },
+  removeStructure: function({ commit }, structure) {
+    commit('removeStructure', structure)
+  },
 }
 
 export default {

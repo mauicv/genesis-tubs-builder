@@ -19,6 +19,12 @@
       :memory="memory"
       @remove-focus="clearToSelect"
     />
+    <object-list-bar
+      @hover-over-structure="hoverOverStructure"
+      @hover-away-structure="hoverAwayStructure"
+      @hover-over-link="hoverOverLink"
+      @hover-away-link="hoverAwayLink"
+    />
     <!-- <zoom-bar style="float: right;"/> -->
   </div>
 </template>
@@ -29,10 +35,11 @@
   import { addLink } from '../js/links'
   import { addStructure } from '../js/structures'
   import { detectNear } from '../js/select'
-  import { draw } from '../js/draw'
+  import { draw, drawConvexSet, drawLine, drawStructure } from '../js/draw'
   import { mapGetters, mapActions } from 'vuex'
   import EditConvexSetBar from '../EditBar/EditConvexSetBar.vue'
   import EditStructureBar from '../EditBar/EditStructureBar.vue'
+  import ObjectListBar from '../EditBar/ObjectListBar.vue'
   import ZoomBar from '../ZoomBar/ZoomBar.vue'
 
   export default {
@@ -40,6 +47,7 @@
     components: {
       'edit-convex-set-bar': EditConvexSetBar,
       'edit-structure-bar': EditStructureBar,
+      'object-list-bar': ObjectListBar,
       'zoom-bar': ZoomBar
     },
     data: function () {
@@ -79,6 +87,8 @@
       glues(newValue, oldValue) { draw(this) },
       joints(newValue, oldValue) { draw(this) },
       focus(newValue, oldValue){ draw(this) },
+      links(newValue, oldValue){ draw(this) },
+      structures(newValue, oldValue){ draw(this) },
       x(x){ draw(this) },
     },
     mounted(){
@@ -147,6 +157,20 @@
         } else if (event.key == 'z') {
           this.zoom(-0.1)
         }
+      },
+      hoverOverStructure(structure){
+        var drawCtx = this.canvas.getContext("2d");
+        drawStructure(structure, drawCtx, 'red')
+      },
+      hoverAwayStructure(structure){
+        draw(this)
+      },
+      hoverOverLink(link){
+        var drawCtx = this.canvas.getContext("2d");
+        drawLine(link, drawCtx, 'red')
+      },
+      hoverAwayLink(link){
+        draw(this)
       }
     }
   }
