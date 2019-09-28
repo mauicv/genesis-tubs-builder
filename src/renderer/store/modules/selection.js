@@ -5,8 +5,8 @@ const loc = window.location.pathname;
 
 const state = {
   sideSelect: '',
-  focus: false,
-  clickFocus: false,
+  // focus: false,
+  // clickFocus: false,
 }
 
 const getters = {
@@ -20,8 +20,12 @@ const mutations = {
 }
 
 const actions = {
-  setSelection: function ({ commit }, choice) {
+  setSelection: function ({ commit, state, rootState }, choice) {
     commit('setSelection', choice)
+    console.log(choice)
+    if (choice != 'Glue' && choice != 'Joint' && choice != 'Graphic' ) {
+      commit('setFocus', null, { root: true })
+    }
   },
 }
 

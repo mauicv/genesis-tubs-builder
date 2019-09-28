@@ -93,6 +93,7 @@
       links(newValue, oldValue){ draw(this) },
       structures(newValue, oldValue){ draw(this) },
       graphics(newValue, oldValue){ draw(this) },
+      selection(newValue, oldValue){ draw(this) },
       x(x){ draw(this) },
     },
     mounted(){
@@ -155,7 +156,6 @@
         this.setSelection('Select')
         this.memory = []
         this.x = null
-        this.setFocus(null)
       },
       handleKeyPress(event){
         if(event.key == 'w') {
@@ -170,6 +170,18 @@
           this.zoom(0.1)
         } else if (event.key == 'z') {
           this.zoom(-0.1)
+        } else if (event.key == 'q') {
+          this.setSelection('Select')
+        } else if (event.key == 'c') {
+          this.setSelection('Convex Set')
+        } else if (event.key == 'l') {
+          this.setSelection('Link')
+        } else if (event.key == 'k') {
+          this.setSelection('Structure')
+        } else if (event.key == 'g') {
+          if (this.focus instanceof primatives.ConvexSet){
+            this.setSelection('Graphic')
+          }
         }
       },
       hoverOverStructure(structure){
