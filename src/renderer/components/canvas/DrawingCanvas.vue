@@ -92,7 +92,7 @@
       focus(newValue, oldValue){ draw(this) },
       links(newValue, oldValue){ draw(this) },
       structures(newValue, oldValue){ draw(this) },
-      graphics(newValue, oldValue){ draw(this); console.log(this.graphics)},
+      graphics(newValue, oldValue){ draw(this) },
       x(x){ draw(this) },
     },
     mounted(){
@@ -120,7 +120,6 @@
             && this.memory.length > 0) this.x = x
       },
       handleMouseClick(event) {
-        console.log(this.selection)
         var x = this.getCanvasLoc(event)
         var options = {
           'Convex Set': addPointToConvextSet,

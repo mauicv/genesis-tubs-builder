@@ -74,6 +74,7 @@ const mutations = {
     state.joints = []
     state.glues = []
     state.links = []
+    state.structures = []
     state.graphics = []
     state.relPoints = []
   },
@@ -177,7 +178,6 @@ const mutations = {
     state.focus.graphics.push(newGraphic)
   },
   removeLastGraphicOnConvexSet(state, convexSet){
-    console.log(convexSet)
     var graphicToRemove = convexSet.graphics.pop()
     state.graphics = state.graphics
       .filter((graphic)=>graphicToRemove != graphic)

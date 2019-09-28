@@ -12,8 +12,6 @@ function addLink(x, ctx){
       }
     });
 
-  console.log(closePoint)
-
   if(closePoint == null) return
   if(ctx.focus == null) {
     ctx.setFocus(closePoint);
