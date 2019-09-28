@@ -118,6 +118,13 @@ const mutations = {
     state.points = state.points
       .filter((point)=>!convexSet.toAllPoints().includes(point))
   },
+  removeConvexSetFromStructures(state, convexSet){
+    state.structures = state.structures.map(function(structure){
+      structure.sets = structure.sets
+        .filter(set=>set != convexSet)
+      return structure
+    })
+  },
   addGlue(state, convexSets){
     if(convexSets[0].isGluedTo(convexSets[1])) return
     var lines = convexSets[0].getAlignedSides(convexSets[1])
@@ -256,7 +263,7 @@ const actions = {
     commit('removeGlues', convexSet)
     commit('removeJoints', convexSet)
     commit('removeAllGraphicsOnConvexSet', convexSet)
-    // commit('removeFromStructure', convexSet)
+    commit('removeConvexSetFromStructures', convexSet)
     commit('deleteConvexSet', convexSet)
   },
   addGlue: function({ commit }, convexSets){

@@ -54,7 +54,6 @@ function draw(ctx){
 
   ctx.joints.forEach((joint)=>drawJoint(joint, drawCtx, 'grey'))
   ctx.links.forEach((link)=>drawLine(link, drawCtx, 'orange'))
-  // ctx.structures.forEach((structure)=>drawStructure(structure, drawCtx, getRandomColor()))
 }
 
 function drawPoint(point, drawCtx, color){
