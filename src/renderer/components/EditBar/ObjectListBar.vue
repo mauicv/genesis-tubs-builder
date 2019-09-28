@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="display: inline-block">
     <div class="badge">
       <span
           style="color: white;"

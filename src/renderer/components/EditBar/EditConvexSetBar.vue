@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="display: inline-block">
     <div v-if="focus != null">
       <div class="badge">
         <span

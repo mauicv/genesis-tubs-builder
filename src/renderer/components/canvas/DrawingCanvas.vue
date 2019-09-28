@@ -25,7 +25,13 @@
       @hover-over-link="hoverOverLink"
       @hover-away-link="hoverAwayLink"
     />
-    <!-- <zoom-bar style="float: right;"/> -->
+    <div class="badge">
+      <span
+          style="color: white;"
+        >
+        {{ selection }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -41,7 +47,6 @@
   import EditConvexSetBar from '../EditBar/EditConvexSetBar.vue'
   import EditStructureBar from '../EditBar/EditStructureBar.vue'
   import ObjectListBar from '../EditBar/ObjectListBar.vue'
-  import ZoomBar from '../ZoomBar/ZoomBar.vue'
 
   export default {
     name: 'drawing-canvas',
@@ -49,7 +54,6 @@
       'edit-convex-set-bar': EditConvexSetBar,
       'edit-structure-bar': EditStructureBar,
       'object-list-bar': ObjectListBar,
-      'zoom-bar': ZoomBar
     },
     data: function () {
       return {
