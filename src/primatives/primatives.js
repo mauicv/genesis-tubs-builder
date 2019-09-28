@@ -16,6 +16,14 @@ class Point {
   }
 }
 
+class RelPoint extends Point {
+  constructor(x, line){
+    x instanceof Point ? super(x.x) : super(x)
+
+    this.anchor=line;
+  }
+}
+
 class Line {
   constructor(from, to){
     this.from=from
@@ -87,11 +95,27 @@ class Joint {
   }
 }
 
+class Graphic {
+  constructor(points, lines){
+    this.lines = []
+
+    if (lines == null) {
+      for(var i=0;i<points.length-1;i++){
+        var newLine = new Line(points[i],points[(i+1)]);
+        this.lines.push(newLine);
+      }
+    } else {
+      this.lines = lines
+    }
+  }
+}
+
 class ConvexSet {
   constructor(points, lines){
     this.lines = []
     this.glues = []
     this.joints = []
+    this.graphics = []
 
     if (lines == null) {
       for(var i=0;i<points.length;i++){
@@ -223,4 +247,4 @@ class Structure {
   }
 }
 
-export { Point, Line, Glue, Joint, ConvexSet, Structure }
+export { Point, Line, Glue, Joint, ConvexSet, Structure, RelPoint, Graphic }

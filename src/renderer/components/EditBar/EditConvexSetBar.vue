@@ -50,6 +50,40 @@
           REMOVE ALL JOINTS
         </span>
       </div>
+
+
+      <div
+          class="badge"
+          v-on:click="setSelection('Graphic')"
+          :style="`background-color: ${
+            selection == 'Graphic' ? 'lightblue' : 'grey'
+          }`"
+        >
+        <span style="color: white;">
+          ADD GRAPHIC
+        </span>
+      </div>
+      <div
+          v-if="focus.graphics.length > 0"
+          v-on:click="removeLastGraphic"
+          class="badge"
+        >
+        <span style="color: white;">
+          UNDO LAST GRAPHIC
+        </span>
+      </div>
+
+      <!-- <div
+          v-if="focus.joints.length>0"
+          v-on:click="removeConvexSetJoints"
+          class="badge"
+        >
+        <span style="color: white;">
+          REMOVE ALL JOINTS
+        </span>
+      </div> -->
+
+
     </div>
     <div v-else class="badge">
       <span style="color: white;">
@@ -68,7 +102,7 @@
 
   export default {
     name: 'edit-bar',
-    props: ['focus'],
+    props: ['focus', 'memory'],
     data: function () {
       return {}
     },
@@ -77,7 +111,8 @@
         'points',
         'lines',
         'convexSets',
-        'selection'
+        'selection',
+        'graphics'
       ]),
       canGlue: function(){
         if(!this.focus) return
@@ -93,7 +128,8 @@
         'setSelection',
         'deleteConvexSet',
         'removeGlues',
-        'removeJoints'
+        'removeJoints',
+        'removeLastGraphicOnConvexSet'
       ]),
       setGlueMode: function(){this.setSelection('Glue')},
       setJointMode: function(){this.setSelection('Joint')},
@@ -107,6 +143,9 @@
       },
       removeConvexSetJoints: function(){
         this.removeJoints(this.focus)
+      },
+      removeLastGraphic: function(){
+        this.removeLastGraphicOnConvexSet(this.focus)
       }
     }
   }

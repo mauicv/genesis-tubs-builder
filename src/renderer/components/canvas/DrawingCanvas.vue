@@ -32,6 +32,7 @@
 <script>
   var primatives = require('../../../primatives/primatives.js')
   import { addPointToConvextSet, addGlue, addJoint } from '../js/convexSet'
+  import { addPointToGraphic, completeGraphic } from '../js/graphics'
   import { addLink } from '../js/links'
   import { addStructure } from '../js/structures'
   import { detectNear } from '../js/select'
@@ -70,7 +71,9 @@
         'joints',
         'links',
         'focus',
-        'structures'
+        'structures',
+        'graphics',
+        'relPoints',
       ]),
       convexSetSelected(){
         return this.focus instanceof primatives.ConvexSet
@@ -89,6 +92,7 @@
       focus(newValue, oldValue){ draw(this) },
       links(newValue, oldValue){ draw(this) },
       structures(newValue, oldValue){ draw(this) },
+      graphics(newValue, oldValue){ draw(this); console.log(this.graphics)},
       x(x){ draw(this) },
     },
     mounted(){
@@ -107,11 +111,13 @@
         'addGlue',
         'addJoint',
         'addLink',
-        'setFocus'
+        'setFocus',
+        'addGraphic'
       ]),
       handleMouseMove(event) {
         var x = this.getCanvasLoc(event)
-        if(this.selection == 'Convex Set' && this.memory.length > 0) this.x = x
+        if((this.selection == 'Convex Set' || this.selection == 'Graphic')
+            && this.memory.length > 0) this.x = x
       },
       handleMouseClick(event) {
         console.log(this.selection)
@@ -122,13 +128,22 @@
           'Glue': addGlue,
           'Joint': addJoint,
           'Link': addLink,
-          'Structure': addStructure
+          'Structure': addStructure,
+          'Graphic': addPointToGraphic
         }[this.selection](x, this)
         draw(this)
       },
       handleMouseDoubleClick(event) {
         var x = this.getCanvasLoc(event)
-        this.clearToSelect()
+        var options = {
+          'Convex Set': this.clearToSelect,
+          'Select': this.clearToSelect,
+          'Glue': this.clearToSelect,
+          'Joint': this.clearToSelect,
+          'Link': this.clearToSelect,
+          'Structure': this.clearToSelect,
+          'Graphic': completeGraphic
+        }[this.selection](x, this)
         draw(this)
       },
       getCanvasLoc(event){

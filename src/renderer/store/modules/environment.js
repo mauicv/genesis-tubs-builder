@@ -12,6 +12,8 @@ const state = {
   joints: [],
   links: [],
   structures: [],
+  relPoints: [],
+  graphics: [],
   scale: 1,
   canvas: null,
   canvasTop: null,
@@ -27,6 +29,8 @@ const getters = {
   glues: (state)=>state.glues,
   joints: (state)=>state.joints,
   links: (state)=>state.links,
+  relPoints: (state)=>state.relPoints,
+  graphics: (state)=>state.graphics,
   canvas: (state)=>state.canvas,
   canvasTop: (state)=>state.canvasTop,
   canvasLeft: (state)=>state.canvasLeft,
@@ -70,6 +74,8 @@ const mutations = {
     state.joints = []
     state.glues = []
     state.links = []
+    state.graphics = []
+    state.relPoints = []
   },
   zoom (state, amount) {
     var points = []
@@ -79,6 +85,14 @@ const mutations = {
       points.push(point)
     })
     state.points = points
+
+    var relPoints = []
+    state.relPoints.forEach(function(point){
+      var xd=gm.mult(gm.minus(point.x, state.center), amount);
+      point.x = (gm.add(xd, point.x));
+      relPoints.push(point)
+    })
+    state.relPoints = relPoints
   },
   move (state, vector) {
     var points = []
@@ -87,6 +101,13 @@ const mutations = {
       points.push(point)
     })
     state.points = points
+
+    var relPoints = []
+    state.relPoints.forEach(function(point){
+      point.x = (gm.add(vector,point.x));
+      relPoints.push(point)
+    })
+    state.relPoints = relPoints
   },
   deleteConvexSet (state, convexSet) {
     state.convexSets = state.convexSets
@@ -145,6 +166,27 @@ const mutations = {
   removeStructure(state, structureToRemove) {
     state.structures = state.structures
       .filter((structure)=>structure != structureToRemove)
+  },
+  addGraphic(state, points){
+    var anchor = state.focus.lines[0]
+    var newRelPoints = points
+      .map(point=>new primatives.RelPoint(point, anchor))
+    state.relPoints = [...state.relPoints, ...newRelPoints]
+    var newGraphic = new primatives.Graphic(newRelPoints)
+    state.graphics = [...state.graphics, newGraphic]
+    state.focus.graphics.push(newGraphic)
+  },
+  removeLastGraphicOnConvexSet(state, convexSet){
+    console.log(convexSet)
+    var graphicToRemove = convexSet.graphics.pop()
+    state.graphics = state.graphics
+      .filter((graphic)=>graphicToRemove != graphic)
+  },
+  removeAllGraphicsOnConvexSet(state, convexSet){
+    var graphicsToRemove = convexSet.graphics
+    state.graphics = state.graphics
+      .filter((graphic)=>!graphicsToRemove.includes(graphic))
+    convexSet.graphics = []
   },
   convertJSONGTEtoJSON (state) {
     ```
@@ -213,6 +255,8 @@ const actions = {
   deleteConvexSet: function({ commit }, convexSet){
     commit('removeGlues', convexSet)
     commit('removeJoints', convexSet)
+    commit('removeAllGraphicsOnConvexSet', convexSet)
+    // commit('removeFromStructure', convexSet)
     commit('deleteConvexSet', convexSet)
   },
   addGlue: function({ commit }, convexSets){
@@ -241,6 +285,15 @@ const actions = {
   },
   removeStructure: function({ commit }, structure) {
     commit('removeStructure', structure)
+  },
+  addGraphic: function({ commit }, line) {
+    commit('addGraphic', line)
+  },
+  removeAllGraphicsOnConvexSet: function({ commit }, convexSet) {
+    commit('removeAllGraphicsOnConvexSet', convexSet)
+  },
+  removeLastGraphicOnConvexSet: function({ commit }, convexSet) {
+    commit('removeLastGraphicOnConvexSet', convexSet)
   },
 }
 

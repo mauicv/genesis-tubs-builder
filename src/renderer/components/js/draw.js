@@ -11,18 +11,22 @@ function draw(ctx){
   })
 
   drawCtx.strokeStyle="blue";
-  if(ctx.selection == 'Convex Set') {
-    ctx.memory.forEach(function(point, index){
-      if(index < ctx.memory.length - 1) {
-        drawCtx.beginPath();
-        drawCtx.moveTo(...point.x);
-        drawCtx.lineTo(
-          ...ctx.memory[index+1].x
-        );
-        drawCtx.stroke();
-      }
-    }, ctx)
-  }
+  ctx.memory.forEach(function(point, index){
+    if(index < ctx.memory.length - 1) {
+      drawCtx.beginPath();
+      drawCtx.moveTo(...point.x);
+      drawCtx.lineTo(
+        ...ctx.memory[index+1].x
+      );
+      drawCtx.stroke();
+    }
+  }, ctx)
+
+  ctx.graphics.forEach(function(graphic){
+    graphic.lines.forEach(function(line){
+      drawLine(line, drawCtx, getRandomColor())
+    })
+  })
 
   if (ctx.x != null){
     drawCtx.strokeStyle="blue";
