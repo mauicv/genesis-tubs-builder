@@ -3,35 +3,35 @@
     <span class="title">
       Genesis Tubs Environment builder
     </span>
+    <div id="draggableMenu">
+      <!-- Include a header DIV with the same name as the draggable DIV, followed by "header" -->
+      <div id="draggableMenuheader">
+        {{ selection }}
+      </div>
+      <edit-convex-set-bar
+        v-if="convexSetSelected"
+        :focus="focus"
+        @remove-focus="clearToSelect"
+      />
+      <edit-structure-bar
+        v-if="structureModeSelected"
+        :memory="memory"
+        @remove-focus="clearToSelect"
+      />
+      <object-list-bar
+        v-if="this.structures.length > 0 || this.links.length > 0"
+        @hover-over-structure="hoverOverStructure"
+        @hover-away-structure="hoverAwayStructure"
+        @hover-over-link="hoverOverLink"
+        @hover-away-link="hoverAwayLink"
+      />
+    </div>
     <canvas
       v-on:mousemove="handleMouseMove"
       v-on:click="handleMouseClick"
       v-on:dblclick="handleMouseDoubleClick"
       v-on:keydown.native="keymonitor"
       id="DrawingBoard"/>
-    <edit-convex-set-bar
-      v-if="convexSetSelected"
-      :focus="focus"
-      @remove-focus="clearToSelect"
-    />
-    <edit-structure-bar
-      v-if="structureModeSelected"
-      :memory="memory"
-      @remove-focus="clearToSelect"
-    />
-    <object-list-bar
-      @hover-over-structure="hoverOverStructure"
-      @hover-away-structure="hoverAwayStructure"
-      @hover-over-link="hoverOverLink"
-      @hover-away-link="hoverAwayLink"
-    />
-    <div class="badge">
-      <span
-          style="color: white;"
-        >
-        {{ selection }}
-      </span>
-    </div>
   </div>
 </template>
 
@@ -105,6 +105,7 @@
       this.setCanvas(canvas)
       this.clearToSelect()
       window.addEventListener('keypress', this.handleKeyPress)
+      dragElement(document.getElementById("draggableMenu"));
     },
     methods: {
       ...mapActions([
@@ -205,9 +206,50 @@
     }
   }
 
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
 </script>
 
-<style scoped>
+<style>
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
   * {
@@ -245,6 +287,45 @@
 
   main > div { flex-basis: 50%; }
 
+  #draggableMenu {
+    position: absolute;
+    z-index: 9;
+    background-color: #2A2A2E;
+    border: 1px solid #4688F1;
+    border-radius: 4px;
+    /* text-align: center; */
+    min-width: 150px;
+  }
+
+  #draggableMenuheader {
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+    background-color: #4688F1;
+    color: #fff;
+  }
+
+  .menu-option {
+    background-color: #1E1E21;
+    cursor: pointer;
+    margin: 4px;
+  }
+
+  .menu-desc {
+    background-color: #4688F1;
+    margin: 4px;
+  }
+
+  .menu-option:hover {
+    background-color: #2A2A2E;
+    margin: 4px;
+  }
+
+  .menu-option-selected {
+    background-color: #92b8f4;
+    margin: 4px;
+  }
+
   .left-side {
     display: flex;
     flex-direction: column;
@@ -261,7 +342,6 @@
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 6px;
-
     float: right;
   }
 
@@ -275,19 +355,14 @@
     margin-bottom: 10px;
   }
 
-  .badge {
-    font-size: .8em;
-    outline: none;
-    padding: 0.75em 2em;
-    border-radius: 2em;
-    display: inline-block;
+  .btn-delete {
+    padding: 0px 5px;
+    border-radius: 50%;
+    background: red;
     color: white;
-    /* background-color: #4fc08d; */
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-    border: 1px solid white;
+    float: right;
   }
-
+  
   .doc button.alt {
     color: #42b983;
     background-color: transparent;

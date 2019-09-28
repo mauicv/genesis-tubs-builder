@@ -1,40 +1,58 @@
 <template>
-  <div style="display: inline-block">
-    <div class="badge">
-      <span
-          style="color: white;"
-        >
-        {{this.links.length}} Links:
-      </span>
-    </div>
-    <div
-        v-for="link in this.links"
-        @mouseover="$emit('hover-over-link', link)"
-        @mouseleave="$emit('hover-away-link', link)"
-        v-on:click="deleteLink(link)"
-        class="badge"
+  <div style="margin-top: 5px;">
+    <div v-if="this.links.length > 0">
+      <div
+        class="menu-desc"
       >
-      <span style="color: white;">
-        X
-      </span>
-    </div>
-    <div class="badge">
-      <span
-          style="color: white;"
+        <span
+            style="color: white;"
+          >
+            LINKS:
+        </span>
+      </div>
+      <div
+          class="menu-option"
+          v-for="link, index in this.links"
+          @mouseover="$emit('hover-over-link', link)"
+          @mouseleave="$emit('hover-away-link', link)"
         >
-        {{this.structures.length}} Stuctures:
-      </span>
+        <span style="color: white;">
+          Link {{ index + 1 }}
+        </span>
+        <span
+          class='btn-delete'
+          v-on:click="deleteLink(link)"
+        >
+          &#10007;
+        </span>
+      </div>
     </div>
-    <div
-        v-for="structure in this.structures"
-        @mouseover="$emit('hover-over-structure', structure)"
-        @mouseleave="$emit('hover-away-structure', structure)"
-        v-on:click="deleteStructure(structure)"
-        class="badge"
+    <div v-if="this.structures.length > 0">
+      <div
+        class="menu-desc"
       >
-      <span style="color: white;">
-        X
-      </span>
+        <span
+            style="color: white;"
+          >
+          STRUCTURES:
+        </span>
+      </div>
+      <div
+          class="menu-option"
+          v-for="structure, index in this.structures"
+          @mouseover="$emit('hover-over-structure', structure)"
+          @mouseleave="$emit('hover-away-structure', structure)"
+        >
+        <span style="color: white;">
+          Structure {{ index + 1 }}
+        </span>
+        <span
+            class='btn-delete'
+            v-on:click="deleteStructure(structure)"
+          >
+          &#10007;
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -74,90 +92,3 @@
   }
 
 </script>
-
-<style scoped>
-  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body { font-family: 'Source Sans Pro', sans-serif; }
-
-  #wrapper {
-    background-color: black;
-    height: 100vh;
-    padding: 60px 80px;
-    width: 100vw;
-  }
-
-  #logo {
-    height: auto;
-    margin-bottom: 20px;
-    width: 420px;
-  }
-
-  canvas {
-    border-style: solid;
-    border-color: grey;
-    border-width: 1px;
-    border-radius: 5px;
-  }
-
-  main {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  main > div { flex-basis: 50%; }
-
-  .left-side {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .welcome {
-    color: #555;
-    font-size: 23px;
-    margin-bottom: 10px;
-  }
-
-  .title {
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 6px;
-
-    float: right;
-  }
-
-  .title.alt {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .doc p {
-    color: black;
-    margin-bottom: 10px;
-  }
-
-  .badge {
-    font-size: .8em;
-    outline: none;
-    padding: 0.75em 2em;
-    border-radius: 2em;
-    display: inline-block;
-    color: white;
-    /* background-color: #4fc08d; */
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-    border: 1px solid white;
-  }
-
-  .doc button.alt {
-    color: #42b983;
-    background-color: transparent;
-  }
-</style>

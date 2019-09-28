@@ -10,7 +10,7 @@ function draw(ctx){
     drawConvexSet(set, drawCtx, 'grey')
   })
 
-  drawCtx.strokeStyle="blue";
+  drawCtx.strokeStyle="#4688F1";
   if(ctx.memory.every(item => item instanceof primatives.Point)) {
     ctx.memory.forEach(function(point, index){
       if(index < ctx.memory.length - 1) {
@@ -23,7 +23,7 @@ function draw(ctx){
       }
     }, ctx)
   } else if (ctx.memory.every(item => item instanceof primatives.ConvexSet)) {
-    ctx.memory.forEach((set)=>drawConvexSet(set, drawCtx, 'red'))
+    ctx.memory.forEach((set)=>drawConvexSet(set, drawCtx, '#4688F1'))
   }
 
   ctx.graphics.forEach(function(graphic){
@@ -33,7 +33,7 @@ function draw(ctx){
   })
 
   if (ctx.x != null){
-    drawCtx.strokeStyle="blue";
+    drawCtx.strokeStyle="#4688F1";
     drawCtx.beginPath();
     drawCtx.moveTo(...ctx.memory[ctx.memory.length - 1].x);
     drawCtx.lineTo(...ctx.x.x);
@@ -42,18 +42,18 @@ function draw(ctx){
 
   if(ctx.focus) {
     if (ctx.focus instanceof primatives.ConvexSet) {
-      drawConvexSet(ctx.focus, drawCtx, 'red')
+      drawConvexSet(ctx.focus, drawCtx, '#4688F1')
     } else if (ctx.focus instanceof primatives.Point) {
-      drawPoint(ctx.focus, drawCtx, 'red')
+      drawPoint(ctx.focus, drawCtx, '#4688F1')
     }
   }
 
   ctx.glues.forEach(function(glue){
-    glue.sides.forEach((line)=>drawLine(line, drawCtx, 'black'))
+    glue.sides.forEach((line)=>drawLine(line, drawCtx, '#4688F1'))
   })
 
-  ctx.joints.forEach((joint)=>drawJoint(joint, drawCtx, 'grey'))
-  ctx.links.forEach((link)=>drawLine(link, drawCtx, 'orange'))
+  ctx.joints.forEach((joint)=>drawJoint(joint, drawCtx, '#4688F1'))
+  ctx.links.forEach((link)=>drawLine(link, drawCtx, '#4688F1'))
 }
 
 function drawPoint(point, drawCtx, color){
