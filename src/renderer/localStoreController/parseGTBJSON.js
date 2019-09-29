@@ -50,7 +50,8 @@ function _unflatten(data){
   return {
     points: flatStoreValues
       .filter(item=>item instanceof primatives.Point && !(item instanceof primatives.RelPoint)),
-    lines: flatStoreValues.filter(item=>item instanceof primatives.Line),
+    lines: flatStoreValues
+      .filter(item=>item instanceof primatives.Line && !(item instanceof primatives.Beam)),
     convexSets: flatStoreValues.filter(item=>item instanceof primatives.ConvexSet),
     joints: flatStoreValues.filter(item=>item instanceof primatives.Joint),
     glues: flatStoreValues.filter(item=>item instanceof primatives.Glue),
