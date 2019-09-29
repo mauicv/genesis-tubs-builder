@@ -1,5 +1,6 @@
 <template>
   <div id="wrapper">
+    <builder-side-bar />
     <span class="title">
       Genesis Tubs Environment builder
     </span>
@@ -47,6 +48,7 @@
   import EditConvexSetBar from '../EditBar/EditConvexSetBar.vue'
   import EditStructureBar from '../EditBar/EditStructureBar.vue'
   import ObjectListBar from '../EditBar/ObjectListBar.vue'
+  import BuilderSideBar from '../SideBars/BuilderSideBar.vue'
 
   export default {
     name: 'drawing-canvas',
@@ -54,6 +56,7 @@
       'edit-convex-set-bar': EditConvexSetBar,
       'edit-structure-bar': EditStructureBar,
       'object-list-bar': ObjectListBar,
+      'builder-side-bar': BuilderSideBar
     },
     data: function () {
       return {
@@ -362,7 +365,7 @@ function dragElement(elmnt) {
     color: white;
     float: right;
   }
-  
+
   .doc button.alt {
     color: #42b983;
     background-color: transparent;

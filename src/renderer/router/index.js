@@ -11,6 +11,11 @@ export default new Router({
       component: require('@/components/canvas/DrawingCanvas.vue').default
     },
     {
+      path: '/test',
+      name: 'test-canvas',
+      component: require('@/components/canvas/TestCanvas.vue').default
+    },
+    {
       path: '*',
       redirect: '/'
     }
