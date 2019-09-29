@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 5px;">
-    <div v-if="this.links.length > 0">
+    <div v-if="this.beams.length > 0">
       <div
         class="menu-desc"
       >
@@ -12,7 +12,7 @@
       </div>
       <div
           class="menu-option"
-          v-for="link, index in this.links"
+          v-for="link, index in this.beams"
           @mouseover="$emit('hover-over-link', link)"
           @mouseleave="$emit('hover-away-link', link)"
         >
@@ -73,7 +73,7 @@
     },
     computed: {
       ...mapGetters([
-        'links',
+        'beams',
         'structures'
       ]),
     },

@@ -2,6 +2,8 @@ var primatives = require('../../../primatives/primatives.js')
 const fs = require('fs');
 var gm = require('genesis-tubs-engine').GeneralMethods
 
+import { saveAsGTBFormat, loadAsGTBFormat } from '../../localStoreController/parseGTBJSON.js'
+
 const loc = window.location.pathname;
 
 const state = {
@@ -10,7 +12,7 @@ const state = {
   convexSets: [],
   glues: [],
   joints: [],
-  links: [],
+  beams: [],
   structures: [],
   relPoints: [],
   graphics: [],
@@ -28,7 +30,7 @@ const getters = {
   convexSets: (state)=>state.convexSets,
   glues: (state)=>state.glues,
   joints: (state)=>state.joints,
-  links: (state)=>state.links,
+  beams: (state)=>state.beams,
   relPoints: (state)=>state.relPoints,
   graphics: (state)=>state.graphics,
   canvas: (state)=>state.canvas,
@@ -62,10 +64,13 @@ const mutations = {
       state.points.push(line.to)
     })
   },
-  save (state) {
-    var dir = loc.substring(0, loc.lastIndexOf('/'));
-    if (dir != '') {dir=`${dir}/`}
-    fs.writeFileSync(`${dir}env.txt`, JSON.stringify(state))
+  save: (state) => saveAsGTBFormat(state),
+  load (state){
+    var parsedData = loadAsGTBFormat(state)
+    Object.entries(parsedData).forEach(function(vals){
+      var [key, val] = [...vals]
+      state[key] = val
+    })
   },
   clean (state) {
     state.points = []
@@ -73,7 +78,7 @@ const mutations = {
     state.convexSets = []
     state.joints = []
     state.glues = []
-    state.links = []
+    state.beams = []
     state.structures = []
     state.graphics = []
     state.relPoints = []
@@ -160,11 +165,11 @@ const mutations = {
     })
   },
   addLink(state, points) {
-    var newLink = new primatives.Line(...points)
-    state.links = [...state.links, newLink]
+    var newLink = new primatives.Beam(...points)
+    state.beams = [...state.beams, newLink]
   },
   removeLink(state, linkToRemove) {
-    state.links = state.links
+    state.beams = state.beams
       .filter((link)=>link != linkToRemove)
   },
   addStructure(state, sets) {
@@ -182,49 +187,27 @@ const mutations = {
     state.relPoints = [...state.relPoints, ...newRelPoints]
     var newGraphic = new primatives.Graphic(newRelPoints)
     state.graphics = [...state.graphics, newGraphic]
+    state.lines = [...state.lines, ...newGraphic.lines]
     state.focus.graphics.push(newGraphic)
   },
   removeLastGraphicOnConvexSet(state, convexSet){
     var graphicToRemove = convexSet.graphics.pop()
+    var linesToRemove = graphicToRemove.lines
+    state.lines = state.lines
+      .filter((line)=>!linesToRemove.includes(line))
     state.graphics = state.graphics
       .filter((graphic)=>graphicToRemove != graphic)
   },
   removeAllGraphicsOnConvexSet(state, convexSet){
     var graphicsToRemove = convexSet.graphics
+    var linesToRemove = convexSet.graphics
+      .reduce((acc, cur)=>[...acc,...cur.lines], [])
+    state.lines = state.lines
+      .filter((line)=>!linesToRemove.includes(line))
     state.graphics = state.graphics
       .filter((graphic)=>!graphicsToRemove.includes(graphic))
     convexSet.graphics = []
-  },
-  convertJSONGTEtoJSON (state) {
-    ```
-    Used to convert a genesis-tubs physics environment stored as json into the
-    format used by the editor.
-    ```
-
-    var newPoint
-    var newConvexSet
-
-    data.points.forEach(function(point){
-      newPoint = new primatives.Point(point.x[0], point.x[1])
-      state.points.push(newPoint)
-    })
-
-    data.convexSets.forEach(function(set){
-      var points = set.pointIndices
-        .map((pointIndex)=>state.points[pointIndex])
-      newConvexSet = new primatives.ConvexSet(points)
-      state.convexSets.push(newConvexSet)
-    })
-
-    state.lines = state.convexSets.reduce((acc, cur)=>[...acc, ...cur.lines], [])
-    // glues, joints, beams, structures, laws, relpoints and graphics
-  },
-  convertJSONtoJSONGTE (state) {
-    ```
-    Used to convert editor format into the json string format required by the
-    genesis-tubs physics engine
-    ```
-  },
+  }
 }
 
 const actions = {
@@ -232,20 +215,8 @@ const actions = {
     commit('save')
   },
   load: function ({ commit }) {
-    // add glues and joints
     commit('clean')
-    var dir = loc.substring(0, loc.lastIndexOf('/'));
-    if (dir != '') {dir=`${dir}/`}
-    var Data_string = fs.readFileSync(`${dir}env.txt`,  'utf8');
-    var data = JSON.parse(Data_string)
-    var convexSets = data.convexSets.map(function(set){
-      var lines = set.lines.map(function(line){
-        var from = new primatives.Point(line.from.x)
-        var to = new primatives.Point(line.to.x)
-        return new primatives.Line(from, to)
-      })
-      commit('addConvexSet', new primatives.ConvexSet(null, lines))
-    })
+    commit('load')
   },
   addConvexSet: function ({ commit }, ConvexSet) {
     commit('addConvexSet', ConvexSet)

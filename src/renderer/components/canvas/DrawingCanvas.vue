@@ -19,7 +19,7 @@
         @remove-focus="clearToSelect"
       />
       <object-list-bar
-        v-if="this.structures.length > 0 || this.links.length > 0"
+        v-if="this.structures.length > 0 || this.beams.length > 0"
         @hover-over-structure="hoverOverStructure"
         @hover-away-structure="hoverAwayStructure"
         @hover-over-link="hoverOverLink"
@@ -39,7 +39,7 @@
   var primatives = require('../../../primatives/primatives.js')
   import { addPointToConvextSet, addGlue, addJoint } from '../js/convexSet'
   import { addPointToGraphic, completeGraphic } from '../js/graphics'
-  import { addLink } from '../js/links'
+  import { addLink } from '../js/beams'
   import { addStructure } from '../js/structures'
   import { detectNear } from '../js/select'
   import { draw, drawConvexSet, drawLine, drawStructure } from '../js/draw'
@@ -73,7 +73,7 @@
         'canvasTop',
         'glues',
         'joints',
-        'links',
+        'beams',
         'focus',
         'structures',
         'graphics',
@@ -94,7 +94,7 @@
       glues(newValue, oldValue) { draw(this) },
       joints(newValue, oldValue) { draw(this) },
       focus(newValue, oldValue){ draw(this) },
-      links(newValue, oldValue){ draw(this) },
+      beams(newValue, oldValue){ draw(this) },
       structures(newValue, oldValue){ draw(this) },
       graphics(newValue, oldValue){ draw(this) },
       selection(newValue, oldValue){ draw(this) },

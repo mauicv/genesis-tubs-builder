@@ -53,7 +53,7 @@ function draw(ctx){
   })
 
   ctx.joints.forEach((joint)=>drawJoint(joint, drawCtx, '#4688F1'))
-  ctx.links.forEach((link)=>drawLine(link, drawCtx, '#4688F1'))
+  ctx.beams.forEach((link)=>drawLine(link, drawCtx, '#4688F1'))
 }
 
 function drawPoint(point, drawCtx, color){

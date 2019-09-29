@@ -1,10 +1,37 @@
 
 var engine = require('genesis-tubs-engine')
 const gm = engine.GeneralMethods
+const uuidv1 = require('uuid/v1');
 
-class Point {
+class BaseId {
+  constructor(){
+    this.uuid = uuidv1();
+  }
+
+  equals(other){
+    return this.uuid == other.uuid
+  }
+
+  notEquals(other){
+    return this.uuid != other.uuid
+  }
+}
+
+class Point extends BaseId {
   constructor(x){
+    super()
     this.x = x
+  }
+
+  toJSON(){
+    var data={
+        "type": "Point",
+        "uuid": this.uuid,
+        "cArgs": [this.x],
+        "eArgs": {},
+        "x": this.x
+      };
+      return data;
   }
 
   copy(){
@@ -19,16 +46,45 @@ class Point {
 class RelPoint extends Point {
   constructor(x, line){
     x instanceof Point ? super(x.x) : super(x)
-
     this.anchor=line;
   }
+
+  toJSON(){
+		var data={
+				"type": "RelPoint",
+				"uuid": this.uuid,
+        "cArgs": [this.x, this.anchor.uuid],
+        "eArgs": {
+          'anchor': this.anchor.uuid
+        },
+				"x": this.x,
+        "anchor": this.anchor.uuid
+			};
+			return data;
+	}
 }
 
-class Line {
+class Line extends BaseId{
   constructor(from, to){
+    super()
     this.from=from
     this.to=to
   }
+
+  toJSON(){
+		var data={
+				"type": "Line",
+				"uuid": this.uuid,
+        "cArgs": [this.to.uuid, this.from.uuid],
+        "eArgs": {
+          "from": this.from.uuid,
+          "to": this.to.uuid
+        },
+				"to": this.to.uuid,
+        "from": this.from.uuid,
+			};
+			return data;
+	}
 
   coAligned(line){
     var aligned =
@@ -71,32 +127,88 @@ class Line {
   }
 }
 
-class Glue {
-  constructor(sides){
-    this.sides = sides
+class Beam extends Line {
+  constructor(from, to){
+    super(from, to)
+  }
+
+  toJSON(){
+    var data={
+        "type": "Beam",
+        "uuid": this.uuid,
+        "cArgs": [this.to.uuid, this.from.uuid],
+        "eArgs": {
+          "from": this.from.uuid,
+          "to": this.to.uuid
+        },
+        "to": this.to.uuid,
+        "from": this.from.uuid,
+      };
+      return data;
   }
 }
 
-class Joint {
-  constructor(linePairs){
+class Glue extends BaseId{
+  constructor(sides){
+    super()
+    this.sides = sides
+  }
+
+  toJSON(){
+		var data={
+				"type": "Glue",
+				"uuid": this.uuid,
+        "cArgs": this.sides.map(side=>side.uuid),
+        "eArgs": {'sides': this.sides.map(side=>side.uuid)},
+				"sides": this.sides.map(side=>side.uuid),
+			};
+			return data;
+	}
+}
+
+class Joint extends BaseId{
+  constructor(linePairs, point){
+    super()
     var linePair1 = linePairs[0]
     var linePair2 = linePairs[1]
     this.line1 = linePair1[0]
     this.line2 = linePair2[0]
     var points1 = [linePair1[0].from, linePair1[0].to]
     var points2 = [linePair2[0].from, linePair2[0].to]
-    points1.forEach(function(thisPoint){
-      points2.forEach(function(thatPoint){
-        if (thisPoint.distanceFrom(thatPoint) == 0) {
-          this.point = thisPoint
-        }
+    if (point == null) {
+      points1.forEach(function(thisPoint){
+        points2.forEach(function(thatPoint){
+          if (thisPoint.distanceFrom(thatPoint) == 0) {
+            this.point = thisPoint
+          }
+        }, this)
       }, this)
-    }, this)
+    } else {
+      this.point = point
+    }
   }
+
+  toJSON(){
+		var data={
+				"type": "Joint",
+				"uuid": this.uuid,
+        "cArgs": [this.line1.uuid, this.line2.uuid, this.point.uuid],
+        "eArgs": {
+          "line1": this.line1.uuid,
+          "line2": this.line2.uuid,
+          "point": this.point.uuid,
+        },
+				"line1": this.line1.uuid,
+        "line2": this.line2.uuid,
+        "point": this.point.uuid,
+			};
+			return data;
+	}
 }
 
-class Graphic {
+class Graphic extends BaseId{
   constructor(points, lines){
+    super()
     this.lines = []
 
     if (lines == null) {
@@ -108,10 +220,24 @@ class Graphic {
       this.lines = lines
     }
   }
+
+  toJSON(){
+		var data={
+				"type": "Graphic",
+				"uuid": this.uuid,
+        "cArgs": [null, this.lines.map(line=>line.uuid)],
+        "eArgs": {
+          "lines": this.lines.map(line=>line.uuid)
+        },
+				"lines": this.lines.map(line=>line.uuid)
+			};
+			return data;
+	}
 }
 
-class ConvexSet {
+class ConvexSet extends BaseId{
   constructor(points, lines){
+    super()
     this.lines = []
     this.glues = []
     this.joints = []
@@ -122,12 +248,30 @@ class ConvexSet {
         var newLine = new Line(points[i],points[(i+1)%points.length]);
         this.lines.push(newLine);
       }
+      this.fixAntiClockwiseOrientaion()
     } else {
       this.lines = lines
     }
-
-    this.fixAntiClockwiseOrientaion()
   }
+
+  toJSON(){
+		var data={
+				"type": "ConvexSet",
+				"uuid": this.uuid,
+        "cArgs": [null, this.lines.map(line=>line.uuid)],
+        "eArgs": {
+          "lines": this.lines.map(line=>line.uuid),
+          "glues": this.glues.map(glue=>glue.uuid),
+          "joints": this.joints.map(joint=>joint.uuid),
+          "graphics": this.graphics.map(graphic=>graphic.uuid)
+        },
+				"lines": this.lines.map(line=>line.uuid),
+        "glues": this.glues.map(glue=>glue.uuid),
+        "joints": this.joints.map(joint=>joint.uuid),
+        "graphics": this.graphics.map(graphic=>graphic.uuid)
+			};
+			return data;
+	}
 
   toPoints(){
     return this.lines.map((line)=>line.from)
@@ -241,10 +385,24 @@ class ConvexSet {
 	}
 }
 
-class Structure {
+class Structure extends BaseId {
   constructor(sets){
+    super()
     this.sets = sets
   }
+
+  toJSON(){
+		var data={
+				"type": "Structure",
+				"uuid": this.uuid,
+        "cArgs": [this.sets.map(set=>set.uuid)],
+        "eArgs": {
+          "sets": this.sets.map(set=>set.uuid)
+        },
+				"sets": this.sets.map(set=>set.uuid)
+			};
+			return data;
+	}
 }
 
-export { Point, Line, Glue, Joint, ConvexSet, Structure, RelPoint, Graphic }
+export { Point, Line, Glue, Joint, ConvexSet, Structure, RelPoint, Graphic, Beam }
