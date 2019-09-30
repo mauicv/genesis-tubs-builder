@@ -1,13 +1,17 @@
+![Icon](./materials/genesis-tub.png)
+
 # genesis-tubs-builder
 
+> A simple User interface for creating and testing environments for the genesis-tubs physics engine. Genesis-tubs is a reference to the Simpsons episode in which Lisa puts her tooth in coke for a science project and indivertibly creates life.  
 
-![](./materials/genesis-tub.png)
+**Note: this project is poorly and only sporadically maintained**
 
-> A simple User interface for creating and testing environments for the genesis-tubs physics engine.
+---
 
 ![Run example](http://g.recordit.co/WbCVs7Qjct.gif)
 
-#### Build Setup
+#### Development
+
 
 ``` bash
 # install dependencies
@@ -17,6 +21,8 @@ npm install
 npm run dev
 
 ```
+
+Environments are simulated using the [genesis-tubs-engine](https://github.com/mauicv/genesis-tubs-engine).
 
 ---
 
