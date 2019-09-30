@@ -23,6 +23,16 @@
                     },
                     {
                         href: '/test',
+                        title: 'Start',
+                        icon: 'glyphicon glyphicon-play',
+                    },
+                    {
+                      href: '/test',
+                      title: 'Stop',
+                      icon: 'glyphicon glyphicon-stop',
+                    },
+                    {
+                        href: '/test',
                         title: 'Restart',
                         icon: 'glyphicon glyphicon-refresh',
                     },
@@ -39,6 +49,10 @@
           onItemClick(event, item) {
             if(item.title == 'Restart') {
               this.$emit('restart')
+            } else if(item.title == 'Stop') {
+              this.$emit('stop')
+            } else if(item.title == 'Start') {
+              this.$emit('start')
             }
           }
         },

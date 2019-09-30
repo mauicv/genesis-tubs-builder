@@ -2,6 +2,8 @@
   <div id="wrapper">
     <test-side-bar
       v-on:restart="restart"
+      v-on:stop="stop"
+      v-on:start="start"
     />
     <canvas
       v-on:click="handleMouseClick"
@@ -34,7 +36,8 @@
         canvasTop: null,
         canvasLeft: null,
         drawCtx: null,
-        animation: null
+        controller: null,
+        running: false
       }
     },
     mounted(){
@@ -50,7 +53,7 @@
       this.canvasTop = rect.top
       this.canvasLeft = rect.left
       var environment = this.loadEnviroment()
-      this.start(environment)
+      this.createAndstart(environment)
     },
     methods: {
       handleMouseMove(event) {
@@ -67,14 +70,27 @@
           event.clientY - this.canvasTop
         ]}
       },
-      start(enviro){
-        var run = this.createRunner(enviro)
-        this.animation = run()
+      createAndstart(enviro){
+        this.controller = this.createRunner(enviro)
+        this.controller.run()
+        this.running=true
       },
       restart(){
+        if(this.controller) this.controller.destroy()
         var enviro = this.loadEnviroment()
-        var run = this.createRunner(enviro)
-        this.animation = run()
+        this.controller = this.createRunner(enviro)
+        this.controller.run()
+        this.running=true
+      },
+      stop(){
+        if(this.controller) this.controller.stop()
+        this.running=false
+      },
+      start(){
+        if(this.controller && !this.running) {
+          this.running=true
+          this.controller.run()
+        }
       },
       loadEnviroment(){
         const loc = window.location.pathname;
@@ -94,12 +110,29 @@
       },
       createRunner(enviro){
         var draw = this.draw
+        var animationRef;
+
         function run(){
           enviro.timeStep();
           draw(enviro);
-          return window.requestAnimationFrame( run );
+          animationRef = window.requestAnimationFrame( run );
         }
-        return run
+
+        function stop(){
+          window.cancelAnimationFrame(animationRef)
+        }
+
+        function destroy(){
+          stop()
+          enviro = null
+          animationRef = null
+        }
+
+        return {
+          'run': run,
+          'stop': stop,
+          'destroy': destroy,
+        }
       },
       draw(enviro){
         this.drawCtx.fillStyle="black";
