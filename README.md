@@ -1,6 +1,11 @@
 # genesis-tubs-builder
 
-> An electron-vue project
+
+![](./materials/genesis-tub.png)
+
+> A simple User interface for creating and testing environments for the genesis-tubs physics engine.
+
+![Run example](http://g.recordit.co/WbCVs7Qjct.gif)
 
 #### Build Setup
 
@@ -10,10 +15,6 @@ npm install
 
 # serve with hot reload at localhost:9080
 npm run dev
-
-# build electron application for production
-npm run build
-
 
 ```
 

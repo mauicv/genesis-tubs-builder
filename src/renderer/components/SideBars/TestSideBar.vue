@@ -17,7 +17,7 @@
                         hiddenOnCollapse: true
                     },
                     {
-                        href: '/',
+                        href: '/test',
                         title: 'Back',
                         icon: 'glyphicon glyphicon-arrow-left',
                     },
@@ -53,6 +53,9 @@
               this.$emit('stop')
             } else if(item.title == 'Start') {
               this.$emit('start')
+            } else if(item.title == 'Back') {
+              this.$emit('leave')
+              this.$router.push({ path: '/' })
             }
           }
         },

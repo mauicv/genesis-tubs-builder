@@ -1,9 +1,10 @@
-<template>
+destroy<template>
   <div id="wrapper">
     <test-side-bar
       v-on:restart="restart"
       v-on:stop="stop"
       v-on:start="start"
+      v-on:leave="destroy"
     />
     <canvas
       v-on:click="handleMouseClick"
@@ -90,6 +91,12 @@
         if(this.controller && !this.running) {
           this.running=true
           this.controller.run()
+        }
+      },
+      destroy(){
+        if(this.controller) {
+          this.running=false
+          this.controller.destroy()
         }
       },
       loadEnviroment(){
