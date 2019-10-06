@@ -1,4 +1,4 @@
-destroy<template>
+<template>
   <div id="wrapper">
     <test-side-bar
       v-on:restart="restart"
