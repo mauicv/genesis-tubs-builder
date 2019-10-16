@@ -167,17 +167,17 @@
       },
       handleKeyPress(event){
         if(event.key == 'w') {
-          this.move([0,-3])
+          this.move([0,-15])
         } else if (event.key == 's') {
-          this.move([0,3])
+          this.move([0,15])
         } else if (event.key == 'a') {
-          this.move([-3,0])
+          this.move([-15,0])
         } else if (event.key == 'd') {
-          this.move([3,0])
+          this.move([15,0])
         } else if (event.key == 'x') {
-          this.zoom(0.1)
+          this.zoom(0.3)
         } else if (event.key == 'z') {
-          this.zoom(-0.1)
+          this.zoom(-0.3)
         } else if (event.key == 'q') {
           this.setSelection('Select')
         } else if (event.key == 'c') {
